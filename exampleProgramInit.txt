@@ -1,0 +1,16 @@
+def functionName(name) { // would become functionName name = do 
+								sampletext <- things 
+								
+   hotel = 10		;
+   hotel += 10		;
+   op = getFile (filePath);
+   op.readfile()        ; //returns a list, each element is a string of what is on that line, ends in \n
+
+} 
+
+
+//Additional Types 
+// Tile Boolean = Tile True|Tile False
+// []
+//import tile.julian for extra marks probably
+// 
