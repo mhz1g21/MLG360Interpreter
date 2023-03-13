@@ -1,0 +1,17 @@
+import Tokens
+t1 = tile1.tl
+t2 = tile2.tl
+count = 64
+repeat count {
+    if (even count) {
+        repeat count/2 {
+            print(t1)
+            print(t2)
+        }
+    }else{
+        repeat count/2 {
+            print(t2)
+            print(t1)
+        }
+    }
+}
