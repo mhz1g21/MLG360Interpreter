@@ -1,5 +1,8 @@
 # MLG360Interpreter
 
+Julian likes justifying design decisions :D
+We are going to justify why we are using local variables (e.g. t1 = tile1.tl), because easier to change if variable used multiple times in the code.
+
 
 
 ## Getting started
