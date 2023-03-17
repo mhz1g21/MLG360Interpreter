@@ -15,6 +15,7 @@ $white+         ;
 "}"            { \p s -> TRightBrace p }
 "("            { \p s -> TLeftParen p }
 ")"            { \p s -> TRightParen p }
+"/"            { \p s -> TIntDivide p}
 "."            { \p s -> TDot p }
 ","            { \p s -> TComma p }
 "if"           { \p s -> TIf p }
@@ -31,6 +32,7 @@ data Token =
   TRightBrace AlexPosn |
   TLeftParen AlexPosn |
   TRightParen AlexPosn |
+  TIntDivide AlexPosn  |
   TDot AlexPosn |
   TComma AlexPosn |
   TIf AlexPosn |
