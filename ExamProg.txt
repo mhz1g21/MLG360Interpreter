@@ -2,16 +2,10 @@ t1 = tile1
 t2 = tile2
 count = 64
 repeat count {
-    if (even count) {
-        repeat count/2 {
-            t1
-            t2
-        }
-    }else{
-        repeat count/2 {
-            t2
-            t1
-        }
+
     }
 }
 
+
+
+//IS PREDICTABLE SO DON'T NEED IFS ANDS OR BUTS, JUST INNER REPEATS 
