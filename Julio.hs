@@ -1,4 +1,5 @@
 import Tokens
+import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
@@ -9,10 +10,11 @@ main = catch main' noLex
 
 main'  = do (fileName : _ ) <- getArgs 
             sourceText <- readFile fileName
-            putStrLn ("Lexing : " ++ sourceText)
-            let lexedProg = (alexScanTokens sourceText)
-            putStrLn ("lexed as " ++ (show lexedProg))
+            putStrLn ("Parsing : " ++ sourceText)
+            let parsedProg = alexScanTokens sourceText
+            putStrLn ("Parsed as " ++ (show parsedProg))
 
+			
 noLex :: ErrorCall -> IO ()
 noLex e = do let err =  show e
              hPutStr stderr ("Problem with lexing: " ++ err)

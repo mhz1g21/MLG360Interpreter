@@ -3,47 +3,52 @@ module Grammar where
 import Tokens
 }
 
-%name parseCalc 
+%name parseJulio 
 %tokentype { Token } 
 %error { parseError }
 %token 
-    let { TokenLet $$} 
-    in  { TokenIn $$} 
-    int { TokenInt (AlexPn x y z) $$} 
-    var { TokenVar (AlexPn x y z) $$} 
-    '=' { TokenEq $$} 
-    '+' { TokenPlus $$} 
-    '-' { TokenMinus $$} 
-    '*' { TokenTimes $$} 
-    '/' { TokenDiv $$} 
-    '(' { TokenLParen $$} 
-    ')' { TokenRParen $$ } 
+    repeatH { TRepeatH $$} 
+	repeatV { TRepeatV $$} 
+	joinH   { TJoinH   $$}
+	joinV   { TJoinV   $$}
+	
+    int { TNumber (AlexPn x y z) $$} 
+    var { TIdentifier (AlexPn x y z) $$} 
+    '=' { TEquals $$} 
+    '(' { TLeftParen $$} 
+    ')' { TRightParen $$ } 
+	'{' { TLeftBrace $$ }
+	'}' { TRightBrace $$ }
+	
+	
 
-%right in 
 %left '+' '-' 
 %left '*' '/' 
-%left NEG 
+%right 'repeatH'
+%right 'repeatV'
+%right 'joinH'
+%right 'joinV'
+
 %% 
-Exp : let var '=' Exp in Exp { Let $2 $4 $6 } 
-    | Exp '+' Exp            { Plus $1 $3 } 
-    | Exp '-' Exp            { Minus $1 $3 } 
-    | Exp '*' Exp            { Times $1 $3 } 
-    | Exp '/' Exp            { Div $1 $3 } 
+Exp : repeatH int '{' Exp '}' { RepeatH $2 $4} 
+	| repeatV int '{' Exp '}' { RepeatV $2 $4}
+	| joinH Exp Exp { JoinH $2 $3}
     | '(' Exp ')'            { $2 } 
-    | '-' Exp %prec NEG      { Negate $2 } 
+	| joinV Exp Exp { JoinV $2 $3}
     | int                    { Int $1 } 
     | var                    { Var $1 } 
+	| var '=' Exp            {Equals $1 $3}
+	
     
 { 
 parseError :: [Token] -> a
 parseError (x:xs) = error ("Parse error at"++ (tokenPosn x))
-data Exp = Let String Exp Exp 
-         | Plus Exp Exp 
-         | Minus Exp Exp 
-         | Times Exp Exp 
-         | Div Exp Exp 
-         | Negate Exp
-         | Int Int 
-         | Var String 
+data Exp = RepeatH Int Exp 
+		| RepeatV Int Exp  
+		| JoinH Exp Exp
+		| JoinV Exp Exp
+		| Equals String Exp
+        | Int Int 
+        | Var String 
          deriving Show 
 } 
