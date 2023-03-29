@@ -11,7 +11,6 @@ import Tokens
 	repeatV { TRepeatV $$} 
 	joinH   { TJoinH   $$}
 	joinV   { TJoinV   $$}
-	
     int { TNumber (AlexPn x y z) $$} 
     var { TIdentifier (AlexPn x y z) $$} 
     '=' { TEquals $$} 
@@ -19,30 +18,29 @@ import Tokens
     ')' { TRightParen $$ } 
 	'{' { TLeftBrace $$ }
 	'}' { TRightBrace $$ }
+	';' { TSemiColon $$ }
 	
-	
-
-%left '+' '-' 
-%left '*' '/' 
-%right 'repeatH'
-%right 'repeatV'
-%right 'joinH'
-%right 'joinV'
+%left 'repeatH'
+%left 'repeatV'
+%left 'joinH'
+%left 'joinV'
+%left '='
+%left ';'
 
 %% 
-Exp : repeatH int '{' Exp '}' { RepeatH $2 $4} 
-	| repeatV int '{' Exp '}' { RepeatV $2 $4}
-	| joinH Exp Exp { JoinH $2 $3}
+Exp : repeatH int '{' Exp '}' ';' { RepeatH $2 $4} 
+	| repeatV int '{' Exp '}' ';' { RepeatV $2 $4}
+	| joinH Exp Exp ';' { JoinH $2 $3}
     | '(' Exp ')'            { $2 } 
-	| joinV Exp Exp { JoinV $2 $3}
+	| joinV Exp Exp ';'{ JoinV $2 $3}
     | int                    { Int $1 } 
     | var                    { Var $1 } 
-	| var '=' Exp            {Equals $1 $3}
-	
-    
+	| var '=' Exp ';'            {Equals $1 $3}
+
+ 
 { 
 parseError :: [Token] -> a
-parseError (x:xs) = error ("Parse error at"++ (tokenPosn x))
+parseError (x:xs) = error ("Parse error at "++ (tokenPosn x))
 data Exp = RepeatH Int Exp 
 		| RepeatV Int Exp  
 		| JoinH Exp Exp

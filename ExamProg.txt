@@ -1,18 +1,15 @@
-t1 = tile1
-t2 = tile2
+t1 = tile1;
+t2 = tile2;
 
 repeatH 32 {
 	repeatV 32 {
-		t1
-		t2
-	}
+		JoinV t1 t2;
+	};
 	repeatH 32 {
-		t2
-		t1
-	}
-		
-}
+		JoinH t1 t2;
+	};
+};
 
 
 
-;)IS PREDICTABLE SO DON'T NEED IFS ANDS OR BUTS, JUST INNER REPEATS 
+:)IS PREDICTABLE SO DON'T NEED IFS ANDS OR BUTS, JUST INNER REPEATS 

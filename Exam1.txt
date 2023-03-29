@@ -1,1 +1,4 @@
-t1 = tile1
+var1 = 0;
+repeatH 10 {
+    var1 = test1;
+};

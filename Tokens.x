@@ -10,7 +10,7 @@ $alpha = [a-zA-Z]
 
 tokens :-
 $white+         ; 
-";)".*            ; 
+":)".*            ; 
 
 "="            { \p s -> TEquals p }
 "{"            { \p s -> TLeftBrace p }
@@ -21,6 +21,8 @@ $white+         ;
 "repeatV"       { \p s -> TRepeatV p }
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
+";"           { \p s -> TSemiColon p  }
+
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }
 $digit+        { \p s -> TNumber p (read s) }
@@ -37,13 +39,10 @@ data Token =
   TNumber AlexPosn Int |
   TRepeatV AlexPosn    |
   TJoinH AlexPosn     |
-  TJoinV AlexPosn     
-  
+  TJoinV AlexPosn    |
+  TSemiColon AlexPosn
   deriving (Eq, Show)
-  
-  
-  
-  
+
 tokenPosn :: Token -> String 
 tokenPosn (TNumber  (AlexPn a l c) n) = show(l) ++ ":" ++ show(c)
 tokenPosn (TIdentifier  (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
@@ -56,5 +55,5 @@ tokenPosn (TRepeatV (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TRepeatH (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TJoinH (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TJoinV (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-
+tokenPosn (TSemiColon (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }
