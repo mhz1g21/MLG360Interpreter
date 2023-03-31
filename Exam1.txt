@@ -1,4 +1,11 @@
-var1 = 0;
-repeatH 10 {
-    var1 = test1;
+t1 = tile1;
+t2 = tile2;
+repeatH 2 {
+    joinH t1 t2;
+    repeatV 2 {
+        joinV t1 t2;
+    };
 };
+
+
+

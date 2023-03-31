@@ -28,21 +28,29 @@ import Tokens
 %left ';'
 
 %% 
-Exp : repeatH int '{' Exp '}' ';' { RepeatH $2 $4} 
-	| repeatV int '{' Exp '}' ';' { RepeatV $2 $4}
-	| joinH Exp Exp ';' { JoinH $2 $3}
+ExpSeq: Exp ';' ExpSeq { ExpSeq $1 $3} 
+	| Exp ';' { Exp $1}
+
+Exp : repeatH int '{' ExpSeq '}'  { RepeatH $2 $4} 
+	| repeatV int '{' ExpSeq '}' { RepeatV $2 $4}
+	| joinH Exp Exp  { JoinH $2 $3}
     | '(' Exp ')'            { $2 } 
-	| joinV Exp Exp ';'{ JoinV $2 $3}
+	| joinV Exp Exp { JoinV $2 $3}
     | int                    { Int $1 } 
     | var                    { Var $1 } 
-	| var '=' Exp ';'            {Equals $1 $3}
+	| var '=' Exp             {Equals $1 $3}
 
- 
+
 { 
 parseError :: [Token] -> a
 parseError (x:xs) = error ("Parse error at "++ (tokenPosn x))
-data Exp = RepeatH Int Exp 
-		| RepeatV Int Exp  
+
+data ExpSeq = ExpSeq Exp ExpSeq 
+		| Exp Exp 
+		deriving Show
+
+data Exp = RepeatH Int ExpSeq 
+		| RepeatV Int ExpSeq  
 		| JoinH Exp Exp
 		| JoinV Exp Exp
 		| Equals String Exp
