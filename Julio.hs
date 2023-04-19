@@ -6,17 +6,29 @@ import System.IO
 
 
 main :: IO ()
-main = catch main' noLex
+main = catch lexing noLex
 
-main'  = do (fileName : _ ) <- getArgs 
-            sourceText <- readFile fileName
-            putStrLn ("Parsing : " ++ sourceText)
-            let parsedProg = alexScanTokens sourceText
-            putStrLn ("lexed as " ++ (show parsedProg))
-            let parsedProg' = parseJulio parsedProg
-            putStrLn ("parsed as " ++ (show parsedProg'))
+lexing = do 
+  (fileName : _ ) <- getArgs 
+  sourceText <- readFile fileName
+  putStrLn ("Lexing : " ++ sourceText)
+  let parsedProg = alexScanTokens sourceText
+  putStrLn ("lexed as " ++ (show parsedProg))
+  parsing parsedProg
+
+parsing parsedProg = do 
+  let parsedProg' = parseJulio parsedProg
+  putStrLn ("parsed as " ++ (show parsedProg'))
 
 noLex :: ErrorCall -> IO ()
-noLex e = do let err =  show e
-             hPutStr stderr ("Problem with: " ++ err)
-             return ()
+noLex e = do 
+  let err =  show e
+  hPutStr stderr ("Lexical Error: " ++ err)
+  return ()
+
+noParse :: ErrorCall ->IO ()
+noParse e = do 
+  let err =  show e
+  hPutStr stderr ("Parsing Error: " ++ err)
+  return ()
+

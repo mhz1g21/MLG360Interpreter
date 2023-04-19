@@ -1,4 +1,4 @@
-t1 = tile1;
+t1 = tile1; 
 t2 = tile2;
 repeatH 32 {
     repeatV 32 {
