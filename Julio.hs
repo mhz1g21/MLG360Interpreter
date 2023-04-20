@@ -3,7 +3,6 @@ import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
-import JHashtable
 
 
 main :: IO ()
