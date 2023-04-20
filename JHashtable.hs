@@ -1,12 +1,13 @@
-import Data.HashTable.IO
+import qualified Data.Map as Map
+import Data.IORef
 
-newMap :: IO (BasicHashTable String a)
-newMap = new :: IO (BasicHashTable String a)
+type MutableMap a = IORef (Map.Map String a)
 
+newMap :: IO (MutableMap a)
+newMap = newIORef Map.empty
 
-insertMap :: BasicHashTable String a -> String -> a -> IO ()
-insertMap = insert
+insertMap :: MutableMap a -> String -> a -> IO ()
+insertMap ref key value = modifyIORef' ref (Map.insert key value)
 
--- Look up a value in the hash map by key
-lookupMap :: BasicHashTable String a -> String -> IO (Maybe a)
-lookupMap = Data.HashTable.IO.lookup
+lookupMap :: MutableMap a -> String -> IO (Maybe a)
+lookupMap ref key = Map.lookup key <$> readIORef ref
