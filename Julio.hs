@@ -3,8 +3,12 @@ import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
+<<<<<<< HEAD
 import Data.Map
 import GHC.IO.Handle.Internals (ioe_notReadable)
+=======
+import Data.Map as Map
+>>>>>>> 51c68dc08ce7e7d42c6ddc73effe82365810c7b8
 
 
 
@@ -51,14 +55,18 @@ evalExpSeq (ExpSeq e es) env =
 evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (JoinH e1 e2) env = undefined
 evalExp (JoinV e1 e2) env = undefined
+<<<<<<< HEAD
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
+=======
+>>>>>>> 51c68dc08ce7e7d42c6ddc73effe82365810c7b8
 evalExp (Int x ) env = undefined
 evalExp (Var x) env = undefined
 evalExp (RepeatH n e) env = undefined
 evalExp (RepeatV n e) env = undefined
 
---operations of expressions
+
+--operations of expressionss
 -- ################################################
 evaluateEquals :: String -> Exp -> Enviroment -> Enviroment
 evaluateEquals x e env = undefined
@@ -124,7 +132,7 @@ evaluateImport x y env = do
   let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
   return env {symbolTable = newSymbolTable}
 
-parseTile = map (map (== '1')). lines
+parseTile = Prelude.map (Prelude.map (== '1')). lines
 
 readFileTile filePath = catch readSuccess noRead
   where
