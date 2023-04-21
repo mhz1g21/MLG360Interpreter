@@ -3,7 +3,7 @@ import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
-import Data.Map
+import Data.Map as Map
 
 
 
@@ -47,14 +47,13 @@ evalExpSeq (ExpSeq e es) env =
 evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (JoinH e1 e2) env = undefined
 evalExp (JoinV e1 e2) env = undefined
-evalExp (Export x y) env = undefined
-evalExp (Import x y) env = undefined
 evalExp (Int x ) env = undefined
 evalExp (Var x) env = undefined
 evalExp (RepeatH n e) env = undefined
 evalExp (RepeatV n e) env = undefined
 
---operations of expressions
+
+--operations of expressionss
 -- ################################################
 evaluateEquals :: String -> Exp -> Enviroment -> Enviroment
 evaluateEquals x e env = undefined
@@ -75,7 +74,7 @@ evaluateImport x y env = do
   let newSymbolTable = Map.insert x (Tile tile) (symbolTable env)
   return env {symbolTable = newSymbolTable}
 
-parseTile = map (map (== '1')). lines
+parseTile = Prelude.map (Prelude.map (== '1')). lines
 
 readFileTile filePath = do
   contents <- readFile filePath

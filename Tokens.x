@@ -12,6 +12,8 @@ tokens :-
 $white+         ; 
 ":)".*            ; 
 "="            { \p s -> TEquals p }
+"<<"            { \p s -> TImport p }
+">>"            { \p s -> TExport p }
 "{"            { \p s -> TLeftBrace p }
 "}"            { \p s -> TRightBrace p }
 "("            { \p s -> TLeftParen p }
@@ -21,8 +23,6 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
-"<<"         { \p s -> TImport p   }
-">>"         { \p s -> TExport p   }
 
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }

@@ -7,21 +7,20 @@ import Tokens
 %tokentype { Token } 
 %error { parseError }
 %token 
-    repeatH { TRepeatH $$} 
+  repeatH { TRepeatH $$}
 	repeatV { TRepeatV $$} 
 	joinH   { TJoinH   $$}
 	joinV   { TJoinV   $$}
-    int { TNumber (AlexPn x y z) $$} 
-    var { TIdentifier (AlexPn x y z) $$} 
-    '=' { TEquals $$} 
-    '(' { TLeftParen $$} 
-    ')' { TRightParen $$ } 
+  int { TNumber (AlexPn x y z) $$}
+  var { TIdentifier (AlexPn x y z) $$}
+  '=' { TEquals $$}
+  '(' { TLeftParen $$}
+  ')' { TRightParen $$ }
 	'{' { TLeftBrace $$ }
 	'}' { TRightBrace $$ }
 	';' { TSemiColon $$ }
-	'<<' {TImport $$}
-	'>>' {TExport $$}
-
+  '<<' {TImport $$ }
+  '>>' {TExport $$ }
 	
 %left 'repeatH'
 %left 'repeatV'
@@ -40,13 +39,13 @@ ExpSeq: Exp ';' ExpSeq { ExpSeq $1 $3}
 Exp : repeatH int '{' ExpSeq '}'  { RepeatH $2 $4} 
 	| repeatV int '{' ExpSeq '}' { RepeatV $2 $4}
 	| joinH Exp Exp  { JoinH $2 $3}
-    | '(' Exp ')'            { $2 } 
+  | '(' Exp ')'            { $2 }
 	| joinV Exp Exp { JoinV $2 $3}
-    | int                    { Int $1 } 
-    | var                    { Var $1 } 
+  | int                    { Int $1 }
+  | var                    { Var $1 }
 	| var '=' Exp             {Equals $1 $3}
-	| var '<<' var             {Import $1 $3}
-	| var '>>' var             {Export $1 $3}
+  | var '<<' Exp           {Import $1 $3}
+  | var '>>' Exp           {Export $1 $3}
 	
 
 
@@ -62,10 +61,10 @@ data Exp = RepeatH Int ExpSeq
 		| RepeatV Int ExpSeq  
 		| JoinH Exp Exp
 		| JoinV Exp Exp
+		| Import String Exp
+		| Export String Exp
 		| Equals String Exp
-        | Int Int 
-        | Var String
-		| Import String String
-		| Export String String
+    | Int Int
+    | Var String
          deriving Show 
 } 
