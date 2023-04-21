@@ -11,7 +11,6 @@ $alpha = [a-zA-Z]
 tokens :-
 $white+         ; 
 ":)".*            ; 
-
 "="            { \p s -> TEquals p }
 "{"            { \p s -> TLeftBrace p }
 "}"            { \p s -> TRightBrace p }
@@ -22,6 +21,8 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
+"<<"         { \p s -> TImport p   }
+">>"         { \p s -> TExport p   }
 
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }
@@ -40,7 +41,9 @@ data Token =
   TRepeatV AlexPosn    |
   TJoinH AlexPosn     |
   TJoinV AlexPosn    |
-  TSemiColon AlexPosn
+  TSemiColon AlexPosn |
+  TImport AlexPosn |
+  TExport AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -56,4 +59,6 @@ tokenPosn (TRepeatH (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TJoinH (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TJoinV (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSemiColon (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TImport (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TExport (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

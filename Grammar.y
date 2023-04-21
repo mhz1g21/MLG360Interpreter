@@ -19,6 +19,9 @@ import Tokens
 	'{' { TLeftBrace $$ }
 	'}' { TRightBrace $$ }
 	';' { TSemiColon $$ }
+	'<<' {TImport $$}
+	'>>' {TExport $$}
+
 	
 %left 'repeatH'
 %left 'repeatV'
@@ -26,6 +29,9 @@ import Tokens
 %left 'joinV'
 %left '='
 %left ';'
+%left '<<'
+%left '>>'
+
 
 %% 
 ExpSeq: Exp ';' ExpSeq { ExpSeq $1 $3} 
@@ -39,6 +45,9 @@ Exp : repeatH int '{' ExpSeq '}'  { RepeatH $2 $4}
     | int                    { Int $1 } 
     | var                    { Var $1 } 
 	| var '=' Exp             {Equals $1 $3}
+	| var '<<' var             {Import $1 $3}
+	| var '>>' var             {Export $1 $3}
+	
 
 
 { 
@@ -55,6 +64,8 @@ data Exp = RepeatH Int ExpSeq
 		| JoinV Exp Exp
 		| Equals String Exp
         | Int Int 
-        | Var String 
+        | Var String
+		| Import String String
+		| Export String String
          deriving Show 
 } 
