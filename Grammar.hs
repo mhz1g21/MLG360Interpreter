@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.20.1.1
+-- parser produced by Happy Version 1.20.0
 
 data HappyAbsSyn t4 t5
 	= HappyTerminal (Token)
@@ -407,8 +407,8 @@ data Exp = RepeatH Int ExpSeq
 		| Import String Exp
 		| Export String Exp
 		| Equals String Exp
-    | Int Int
-    | Var String
+    	| Int Int
+    	| Var String
          deriving Show
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $

@@ -3,12 +3,10 @@ import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
-<<<<<<< HEAD
 import Data.Map
-import GHC.IO.Handle.Internals (ioe_notReadable)
-=======
-import Data.Map as Map
->>>>>>> 51c68dc08ce7e7d42c6ddc73effe82365810c7b8
+import qualified Data.Map as Map
+
+
 
 
 
@@ -30,10 +28,10 @@ parsing parsedProg = do
 
 doEnviroment parsedProg = do
   let finalEnv = evalExpSeq parsedProg initEnv
-  putStrLn ("evaluated as " ++ show finalEnv)
+  putStrLn ("finished with enviroment")
 
 --enviroment variables
-data Enviroment = Enviroment { stack :: [Exp], symbolTable :: Map String Value } deriving Show
+data Enviroment = Enviroment { stack :: [Value], symbolTable :: Map String Value } deriving Show
 
 initEnv :: Enviroment
 initEnv = Enviroment [] empty
@@ -46,20 +44,20 @@ data Value = TileValue Tile
 --evaluator
 -- ######################################################################################################################
 
+
+evalExpSeq :: ExpSeq -> Enviroment -> IO Enviroment
 evalExpSeq (Exp e) env = evalExp e env
-evalExpSeq (ExpSeq e es) env = 
-  let newEnv = evalExp e env
-  in evalExpSeq es newEnv
+evalExpSeq (ExpSeq e es) env = do
+  newEnv <- evalExp e env
+  evalExpSeq es newEnv
+
 
 
 evalExp (Equals x e) env = evaluateEquals x e env
-evalExp (JoinH e1 e2) env = undefined
-evalExp (JoinV e1 e2) env = undefined
-<<<<<<< HEAD
+evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
+evalExp (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
-=======
->>>>>>> 51c68dc08ce7e7d42c6ddc73effe82365810c7b8
 evalExp (Int x ) env = undefined
 evalExp (Var x) env = undefined
 evalExp (RepeatH n e) env = undefined
@@ -68,7 +66,7 @@ evalExp (RepeatV n e) env = undefined
 
 --operations of expressionss
 -- ################################################
-evaluateEquals :: String -> Exp -> Enviroment -> Enviroment
+evaluateEquals :: String -> Exp -> Enviroment -> IO Enviroment
 evaluateEquals x e env = undefined
 
 --join tiles horizontally
@@ -78,14 +76,14 @@ evaluateJoinH e1 e2 env = do
   let tile1 = head $ stack newEnv2
   let tile2 = head $ tail $ stack newEnv2
   case (tile1,tile2) of 
-    (TileValue t1, TileValue t2) -> case JoinTilesH t1 t2 of
-      Right newTile -> return newEnv2 {stack = TileValue newTile : drop 2 (stack newEnv2)}
+    (TileValue t1, TileValue t2) -> case joinTilesH t1 t2 of
+      Right newTile -> return newEnv2 {stack = TileValue newTile : Prelude.drop 2 (stack newEnv2)}
       Left err -> do
         error $ "Tiles have different dimentions: " ++ err
     _ -> error "expected tiles for joinH"
 
 joinTilesH tile1 tile2 
-  | validateTile tile1 tile2 = Right (zipwith (++) tile1 tile2)
+  | validateTile tile1 tile2 = Right (zipWith (++) tile1 tile2)
   | otherwise = error "Tiles have different dimentions"
 
 --join tiles vertically
@@ -96,24 +94,24 @@ evaluateJoinV e1 e2 env = do
   let tile2 = head $ tail $ stack newEnv2
   case (tile1,tile2) of
     (TileValue t1, TileValue t2) -> case joinTilesV t1 t2 of
-      Right newTile -> return newEnv2 {stack = TileValue newTile : drop 2 (stack newEnv2)}
+      Right newTile -> return newEnv2 {stack = TileValue newTile : Prelude.drop 2 (stack newEnv2)}
       Left err -> do
         error $ "Tiles have different dimentions: " ++ err
     _ -> error "expected tiles for joinV"
   
 
-validateTile tile1 tile2 = allEqual (map length tile1) && allEqual (map length tile2)
+validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
   where 
     allEqual xs = and $ zipWith (==) xs (tail xs)
 
-joinTilesV tile1 tile1
+joinTilesV tile1 tile2
   | validateTile tile1 tile2 = Right (tile1 ++ tile2)
   | otherwise = error "Tiles have different dimentions"
 
 --export tile
 evaluateExport x y env = case Map.lookup x (symbolTable env) of
   Just (TileValue tile) -> do
-    let filePath = y <.> "tl"
+    let filePath = show y ++ ".tl"
     writeTilefile filePath tile
     return env
   _ -> error $ "Tile variable not found: " ++ x
@@ -121,13 +119,13 @@ evaluateExport x y env = case Map.lookup x (symbolTable env) of
 boolToChar True = '1'
 boolToChar False = '0'
 
-tileToString = unlines . map (map boolToChar)
+tileToString = unlines . Prelude.map (Prelude.map boolToChar)
 
 writeTilefile filepath tile = writeFile filepath (tileToString tile)
 
 --import tile
 evaluateImport x y env = do
-  let filepath = y <.> "tl"
+  let filepath = show y ++ ".tl"
   tile <- readFileTile filepath
   let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
   return env {symbolTable = newSymbolTable}

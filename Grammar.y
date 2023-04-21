@@ -64,7 +64,7 @@ data Exp = RepeatH Int ExpSeq
 		| Import String Exp
 		| Export String Exp
 		| Equals String Exp
-    | Int Int
-    | Var String
+    	| Int Int
+    	| Var String
          deriving Show 
 } 
