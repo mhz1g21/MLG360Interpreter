@@ -139,6 +139,7 @@ readFileTile filePath = catch readSuccess noRead
     readSuccess = do
       file <- readFile filePath
       return $ parseTile file
+    noRead :: IOException -> IO Tile
     noRead e = do
       error $ "File not found: " ++ filePath
 
@@ -169,3 +170,8 @@ noParse e = do
   hPutStr stderr ("Parsing Error: " ++ err)
   return ()
 
+
+
+validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
+  where 
+    allEqual xs = and $ zipWith (==) xs (tail xs)
