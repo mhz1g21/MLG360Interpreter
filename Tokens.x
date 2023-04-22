@@ -30,6 +30,7 @@ $white+         ;
 "_"        { \p s -> TBlank p }
 "and"      { \p s -> TAnd p}
 "or"       { \p s -> TOr p}
+"subtile"  { \p s -> TSubtile p}
 
 
 
@@ -59,6 +60,7 @@ data Token =
   |TBlank AlexPosn
   |TAnd AlexPosn
   |TOr AlexPosn
+  |TSubtile AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -82,4 +84,5 @@ tokenPosn (TReflectY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TSubtile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

@@ -28,6 +28,8 @@ import Tokens
 	'_'     {TBlank $$}
   and     {TAnd $$}
   or      {TOr $$}
+  subtile {TSubtile $$}
+
 
 %left 'rotate'
 %left 'repeat'
@@ -43,6 +45,7 @@ import Tokens
 %left 'reflectY'
 %left 'and'
 %left 'or'
+%left 'subtile'
 
 
 %% 
@@ -63,9 +66,10 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
 	| scale int Exp         {Scale $2 $3}
 	| reflectX Exp           {ReflectX $2}
 	| reflectY Exp           {ReflectY $2}
-	| '_'                   {Blank}
+	| '_' Exp                   {Blank $2}
 	| and Exp Exp          {And $2 $3}
 	| or Exp Exp          {Or $2 $3}
+	| subtile int Exp     {Subtile $2 $3}
 
 
 { 
@@ -89,8 +93,9 @@ data Exp = Repeat Int ExpSeq
     | Scale Int Exp
     | ReflectX Exp
     | ReflectY Exp
-    | Blank
+    | Blank Exp
     | And Exp Exp
     | Or Exp Exp
+    | Subtile Int Exp
          deriving Show 
 } 
