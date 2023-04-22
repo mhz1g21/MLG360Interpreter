@@ -30,7 +30,6 @@ import Tokens
   or      {TOr $$}
   subtile {TSubtile $$}
 
-
 %left 'rotate'
 %left 'repeat'
 %left 'joinH'
@@ -69,7 +68,7 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
 	| '_' Exp                   {Blank $2}
 	| and Exp Exp          {And $2 $3}
 	| or Exp Exp          {Or $2 $3}
-	| subtile int Exp     {Subtile $2 $3}
+  | subtile int Exp Exp     {Subtile $2 $3 $4}
 
 
 { 
@@ -96,6 +95,6 @@ data Exp = Repeat Int ExpSeq
     | Blank Exp
     | And Exp Exp
     | Or Exp Exp
-    | Subtile Int Exp
+    | Subtile Int Exp Exp
          deriving Show 
 } 
