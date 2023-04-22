@@ -67,6 +67,7 @@ evalExpToValue (Rotate n e) env = evaluateRotate n e env
 evalExpToValue (Scale n e) env = evaluateScale n e env
 evalExpToValue (ReflectY e) env = evaluateReflectY e env
 evalExpToValue (ReflectX e) env = evaluateReflectX e env
+evalExpToValue (And e1 e2) env = evaluateAnd e1 e2 env
 evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
@@ -75,6 +76,17 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--evaluate and operation
+evaluateAnd e1 e2 env = do
+  tileValue1 <- evalExpToValue e1 env
+  tileValue2 <- evalExpToValue e2 env
+  case (tileValue1, tileValue2) of
+    (TileValue tile1, TileValue tile2) -> do
+      let resultTile = andTiles tile1 tile2
+      return (TileValue resultTile)
+    _ -> error "The operands of 'and' should be TileValues"
+andTiles tile1 tile2 = zipWith (zipWith (&&)) tile1 tile2
 
 --reflect tile y axis
 evaluateReflectY e env = do
