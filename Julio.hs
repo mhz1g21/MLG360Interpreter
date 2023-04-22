@@ -59,6 +59,7 @@ evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
   Just value -> return value
   Nothing    -> error ("Undefined variable: " ++ x)
 evalExpToValue (JoinV e1 e2) env = evaluateJoinV e1 e2 env
+evalExpToValue (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 
 --operations of expressionss
 -- ################################################
@@ -71,20 +72,15 @@ evaluateEquals x e env = do
 --join tiles horizontally
 
 evaluateJoinH e1 e2 env = do
-  newEnv1 <- evalExp e1 env
-  newEnv2 <- evalExp e2 newEnv1 {stack = tail $ stack newEnv1}
-  let tile1 = head $ stack newEnv2
-  let tile2 = head $ tail $ stack newEnv2
-  case (tile1,tile2) of 
-    (TileValue t1, TileValue t2) -> case joinTilesH t1 t2 of
-      Right newTile -> return newEnv2 {stack = TileValue newTile : Prelude.drop 2 (stack newEnv2)}
-      Left err -> do
-        error $ "Tiles have different dimentions: " ++ err
-    _ -> error "expected tiles for joinH"
+  tile1 <- evalExpToValue e1 env
+  tile2 <- evalExpToValue e2 env
+  case (tile1, tile2) of
+    (TileValue t1, TileValue t2) -> do
+      let joinedTile = joinTilesH t1 t2
+      return (TileValue joinedTile)
+    _ -> error "Both operands of joinH should be TileValues"
 
-joinTilesH tile1 tile2 
-  | validateTile tile1 tile2 = Right (zipWith (++) tile1 tile2)
-  | otherwise = error "Tiles have different dimentions"
+joinTilesH t1 t2 = zipWith (++) t1 t2
 
 --join tiles vertically
 evaluateJoinV e1 e2 env = do
