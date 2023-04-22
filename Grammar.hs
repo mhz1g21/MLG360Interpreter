@@ -15,7 +15,7 @@ data HappyAbsSyn t4 t5
 	| HappyAbsSyn5 t5
 
 happyExpList :: Happy_Data_Array.Array Prelude.Int Prelude.Int
-happyExpList = Happy_Data_Array.listArray (0,77) ([3040,2044,49342,127,128,4096,0,3040,2044,49342,127,0,16384,48,3040,2044,49342,127,1,4096,0,3040,2044,49342,57471,64523,48647,32704,3040,2044,16,0,0,0,8,3040,2044,49342,57471,64523,48647,32704,0,0,0,0,0,48640,32704,3040,2044,0,0,16,48640,32704,3040,2044,49342,57471,64523,48647,32704,8192,0,49342,127,0,48640,32704,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57344,64523,7,0,16384,0,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,78) ([3040,2044,49342,127,128,4096,0,3040,2044,49342,127,0,16384,48,3040,2044,49342,127,1,4096,0,3040,2044,49342,57471,64523,48647,32704,3040,2044,16,0,0,0,8,3040,2044,49342,57471,64523,48647,32704,0,0,0,0,0,48640,32704,3040,2044,0,0,16,48640,32704,3040,2044,49342,57471,64523,48647,32704,8192,0,49342,127,0,48640,32704,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57344,64523,48647,32704,16384,0,0,0,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
@@ -549,12 +549,30 @@ action_50 (27) = happyShift action_17
 action_50 (5) = happyGoto action_51
 action_50 _ = happyFail (happyExpListPerState 50)
 
-action_51 _ = happyReduce_20
+action_51 (6) = happyShift action_3
+action_51 (7) = happyShift action_4
+action_51 (8) = happyShift action_5
+action_51 (9) = happyShift action_6
+action_51 (10) = happyShift action_7
+action_51 (12) = happyShift action_8
+action_51 (19) = happyShift action_9
+action_51 (20) = happyShift action_10
+action_51 (21) = happyShift action_11
+action_51 (22) = happyShift action_12
+action_51 (23) = happyShift action_13
+action_51 (24) = happyShift action_14
+action_51 (25) = happyShift action_15
+action_51 (26) = happyShift action_16
+action_51 (27) = happyShift action_17
+action_51 (5) = happyGoto action_54
+action_51 _ = happyFail (happyExpListPerState 51)
 
 action_52 (15) = happyShift action_53
 action_52 _ = happyFail (happyExpListPerState 52)
 
 action_53 _ = happyReduce_3
+
+action_54 _ = happyReduce_20
 
 happyReduce_1 = happySpecReduce_3  4 happyReduction_1
 happyReduction_1 (HappyAbsSyn4  happy_var_3)
@@ -720,14 +738,15 @@ happyReduction_19 (HappyAbsSyn5  happy_var_3)
 	)
 happyReduction_19 _ _ _  = notHappyAtAll 
 
-happyReduce_20 = happyReduce 4 5 happyReduction_20
-happyReduction_20 ((HappyAbsSyn5  happy_var_4) `HappyStk`
+happyReduce_20 = happyReduce 5 5 happyReduction_20
+happyReduction_20 ((HappyAbsSyn5  happy_var_5) `HappyStk`
+	(HappyAbsSyn5  happy_var_4) `HappyStk`
 	(HappyAbsSyn5  happy_var_3) `HappyStk`
 	(HappyTerminal (TNumber (AlexPn x y z) happy_var_2)) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (Subtile happy_var_2 happy_var_3 happy_var_4
+		 (Subtile happy_var_2 happy_var_3 happy_var_4 happy_var_5
 	) `HappyStk` happyRest
 
 happyNewToken action sts stk [] =
@@ -816,7 +835,7 @@ data Exp = Repeat Int ExpSeq
     | Blank Exp
     | And Exp Exp
     | Or Exp Exp
-    | Subtile Int Exp Exp
+    | Subtile Int Exp Exp Exp
          deriving Show
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $

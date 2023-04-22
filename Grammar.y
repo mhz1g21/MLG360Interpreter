@@ -68,7 +68,7 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | '_' Exp                  { Blank $2 }
     | and Exp Exp              { And $2 $3 }
     | or Exp Exp               { Or $2 $3 }
-    | subtile int Exp Exp      { Subtile $2 $3 $4 }
+    | subtile int Exp Exp Exp      { Subtile $2 $3 $4 $5}
 
 
 { 
@@ -95,6 +95,6 @@ data Exp = Repeat Int ExpSeq
     | Blank Exp
     | And Exp Exp
     | Or Exp Exp
-    | Subtile Int Exp Exp
+    | Subtile Int Exp Exp Exp
          deriving Show 
 } 
