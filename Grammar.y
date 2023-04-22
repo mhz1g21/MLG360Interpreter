@@ -20,8 +20,9 @@ import Tokens
 	';' { TSemiColon $$ }
   '<<' {TImport $$ }
   '>>' {TExport $$ }
-	'not'  {TNot $$}
+	'¬'  {TNot $$}
 	rotate {TRotate $$}
+	scale {TScale $$}
 
 %left 'rotate'
 %left 'repeat'
@@ -32,6 +33,7 @@ import Tokens
 %left '<<'
 %left '>>'
 %left '¬'
+%left 'scale'
 
 
 
@@ -41,15 +43,16 @@ ExpSeq: Exp ';' ExpSeq { ExpSeq $1 $3}
 
 Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
 	| joinH Exp Exp  { JoinH $2 $3}
-  	| '(' Exp ')'            { $2 }
+  | '(' Exp ')'            { $2 }
 	| joinV Exp Exp { JoinV $2 $3}
-  	| int                    { Int $1 }
-  	| var                    { Var $1 }
+  | int                    { Int $1 }
+  | var                    { Var $1 }
 	| var '=' Exp             {Equals $1 $3}
-  	| var '<<' Exp           {Import $1 $3}
-  	| var '>>' Exp           {Export $1 $3}
-	| 'not' Exp                {Not $2}
+  | var '<<' Exp           {Import $1 $3}
+  | var '>>' Exp           {Export $1 $3}
+	| '¬' Exp                {Not $2}
 	| rotate int Exp         {Rotate $2 $3}
+	| scale int Exp         {Scale $2 $3}
 
 
 
@@ -68,8 +71,9 @@ data Exp = Repeat Int ExpSeq
 		| Export String Exp
 		| Equals String Exp
 		| Not Exp
-    	| Int Int
-    	| Var String
-    	| Rotate Int Exp
+    | Int Int
+    | Var String
+    | Rotate Int Exp
+    | Scale Int Exp
          deriving Show 
 } 
