@@ -52,6 +52,7 @@ evalExpSeq (ExpSeq e es) env = do
 evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
+evalExp (Repeat n e) env = evaluateRepeat n e env
 evalExp _ _ = error "Not implemented"
 
 evalExpToValue (Int n) _ = return (IntValue n)
@@ -135,11 +136,15 @@ evaluateInt x env = undefined
 evaluateVar :: String -> Enviroment -> Enviroment
 evaluateVar x env = undefined
 
-evaluateRepeatH :: Int -> ExpSeq -> Enviroment -> Enviroment
-evaluateRepeatH n e env = undefined
+--loop n times
+evaluateRepeat 0 _ env = return env
+evaluateRepeat n es env
+  | n > 0 = do
+      newEnv <- evalExpSeq es env
+      evaluateRepeat (n - 1) es newEnv
+  | otherwise = error "Repeat count should be non-negative"
 
-evaluateRepeatV :: Int -> ExpSeq -> Enviroment -> Enviroment
-evaluateRepeatV n e env = undefined
+
 
 
 --Error handling
