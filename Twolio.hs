@@ -62,14 +62,16 @@ data Value = TileValue Tile
 evalExpSeq :: ExpSeq -> Enviroment -> IO Enviroment
 evalExpSeq (Exp e) env = trace ("No more recursion") evalExp e env
 evalExpSeq (ExpSeq e es) env = do
+  putStrLn "More recursion"
   newEnv <- evalExp e env
   evalExpSeq es newEnv
-evalExpSeq _ _ = do
-            return initEnv
+
 
 evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 evalExp (Import x y) env = evaluateImport x y env
-evalExp _ _ = do 
+evalExp (Export x y) env = evaluateExport x y env
+evalExp _ _ = do
+          putStrLn "I don't know what that is"
           return initEnv
 
 
@@ -99,7 +101,8 @@ validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prel
 
 --import tile
 evaluateImport x (Var y) env = do
-  let filepath = show y ++ ".tl"
+  let filename  = show y
+  let filepath = y ++".tl"
   tile <- readFileTile filepath
   let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
   return env {symbolTable = newSymbolTable}
@@ -113,6 +116,21 @@ readFileTile filePath = catch readSuccess noRead
     noRead e = throwIO $ userError $ "File not found: " ++ filePath
 
 
+--export tile
+evaluateExport x (Var y) env = case Map.lookup x (symbolTable env) of
+  Just (TileValue tile) -> do
+    let filename  = show y
+    let filePath = y ++".tl"
+    writeTilefile filePath tile
+    return env
+  _ -> error $ "Tile variable not found: " ++ x
+
+boolToChar True = '1'
+boolToChar False = '0'
+
+tileToString = unlines . Prelude.map (Prelude.map boolToChar)
+
+writeTilefile filepath tile = writeFile filepath (tileToString tile)
 
 
 parseTile = Prelude.map (Prelude.map (== '1')). lines
