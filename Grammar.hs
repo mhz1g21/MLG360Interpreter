@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.20.1.1
+-- parser produced by Happy Version 1.20.0
 
 data HappyAbsSyn t4 t5
 	= HappyTerminal (Token)
@@ -21,7 +21,7 @@ happyExpList = Happy_Data_Array.listArray (0,51) ([3040,31756,385,512,128,48640,
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_parseJulio","ExpSeq","Exp","repeat","joinH","joinV","int","var","'='","'('","')'","'{'","'}'","';'","'<<'","'>>'","'\9516\188'","rotate","%eof"]
+  where token_strs = ["error","%dummy","%start_parseJulio","ExpSeq","Exp","repeat","joinH","joinV","int","var","'='","'('","')'","'{'","'}'","';'","'<<'","'>>'","'not'","rotate","%eof"]
         bit_start = st Prelude.* 21
         bit_end = (st Prelude.+ 1) Prelude.* 21
         read_bit = readArrayBit happyExpList
@@ -434,9 +434,9 @@ data Exp = Repeat Int ExpSeq
 		| Export String Exp
 		| Equals String Exp
 		| Not Exp
-    | Int Int
-    | Var String
-    | Rotate Int Exp
+    	| Int Int
+    	| Var String
+    	| Rotate Int Exp
          deriving Show
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $

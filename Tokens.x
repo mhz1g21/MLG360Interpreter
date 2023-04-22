@@ -22,7 +22,7 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
-"¬"	      { \p s -> TNot p }
+"not"	      { \p s -> TNot p }
 "rotate"          { \p s -> TRotate p }
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }
