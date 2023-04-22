@@ -101,10 +101,7 @@ evaluateJoinV e1 e2 env = do
     _ -> error "expected tiles for joinV"
   
 
-validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
-  where 
-    allEqual xs = and $ zipWith (==) xs (tail xs)
-
+ 
 joinTilesV tile1 tile2
   | validateTile tile1 tile2 = Right (tile1 ++ tile2)
   | otherwise = error "Tiles have different dimentions"

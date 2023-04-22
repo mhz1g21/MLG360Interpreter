@@ -4,7 +4,7 @@ import System.Environment
 import Control.Exception
 import System.IO
 import Data.Map as Map
-
+import Debug.Trace
 
 
 main :: IO ()
@@ -15,18 +15,21 @@ lexing = do
   sourceText <- readFile fileName
   putStrLn ("Lexing : " ++ sourceText)
   let lexedProg = alexScanTokens sourceText
-  putStrLn ("lexed as " ++ (show lexedProg))
+  putStrLn ("Lexed as " ++ (show lexedProg))
   parsing lexedProg
 
 parsing lexedProg = do 
   let parsedProg = parseJulio lexedProg
-  putStrLn ("parsed as " ++ (show parsedProg))
+  putStrLn ("Parsed as " ++ (show parsedProg))
   doEnviroment parsedProg
 
 
 doEnviroment parsedProg = do
-  let finalEnv = evalExpSeq parsedProg initEnv
-  putStrLn ("finished with enviroment")
+  putStrLn ("Evaluating : "++show parsedProg)
+  putStrLn ("initEnv : "++ show initEnv)
+  finalEnv <- evalExpSeq parsedProg initEnv
+  putStrLn(show(head $ stack finalEnv))
+  putStrLn ("Finished with Enviroment")
 
 
 --Error handling
@@ -59,12 +62,14 @@ data Value = TileValue Tile
 
 
 evalExpSeq :: ExpSeq -> Enviroment -> IO Enviroment
-evalExpSeq (Exp e) env = evalExp e env
+evalExpSeq (Exp e) env = trace ("My name is Jef") evalExp e env
 evalExpSeq (ExpSeq e es) env = do
+  putStrLn "We got here"
   newEnv <- evalExp e env
   evalExpSeq es newEnv
-
-
+evalExpSeq _ _ = do
+            putStrLn "Oh shit" 
+            return initEnv
 
 evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 
@@ -90,3 +95,25 @@ joinTilesH tile1 tile2
 validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
   where 
     allEqual xs = and $ zipWith (==) xs (tail xs)
+
+
+
+--import tile
+evaluateImport x y env = do
+  let filepath = show y ++ ".tl"
+  tile <- readFileTile filepath
+  let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
+  return env {symbolTable = newSymbolTable}
+
+readFileTile filePath = catch readSuccess noRead
+  where
+    readSuccess = do
+      file <- readFile filePath
+      return $ parseTile file
+    noRead :: IOException -> IO Tile
+    noRead e = throwIO $ userError $ "File not found: " ++ filePath
+
+
+
+
+parseTile = Prelude.map (Prelude.map (== '1')). lines
