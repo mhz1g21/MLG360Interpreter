@@ -26,7 +26,6 @@ parsing lexedProg = do
 
 doEnviroment parsedProg = do
   finalEnv <- evalExpSeq parsedProg initEnv
-  putStrLn(show(head $ stack finalEnv))
   putStrLn ("Finished with Enviroment")
 
 

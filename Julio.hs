@@ -17,18 +17,20 @@ lexing = do
   (fileName : _ ) <- getArgs 
   sourceText <- readFile fileName
   putStrLn ("Lexing : " ++ sourceText)
-  let parsedProg = alexScanTokens sourceText
-  putStrLn ("lexed as " ++ (show parsedProg))
-  parsing parsedProg
+  let lexedProg = alexScanTokens sourceText
+  putStrLn ("Lexed as " ++ (show lexedProg))
+  parsing lexedProg
 
-parsing parsedProg = do 
-  let parsedProg' = parseJulio parsedProg
-  putStrLn ("parsed as " ++ (show parsedProg'))
-  doEnviroment parsedProg'
+parsing lexedProg = do 
+  let parsedProg = parseJulio lexedProg
+  putStrLn ("Parsed as " ++ (show parsedProg))
+  doEnviroment parsedProg
+
 
 doEnviroment parsedProg = do
-  let finalEnv = evalExpSeq parsedProg initEnv
-  putStrLn ("finished with enviroment")
+  finalEnv <- evalExpSeq parsedProg initEnv
+  putStrLn ("Finished with Enviroment")
+
 
 --enviroment variables
 data Enviroment = Enviroment { stack :: [Value], symbolTable :: Map String Value } deriving Show
@@ -106,10 +108,12 @@ joinTilesV tile1 tile2
   | validateTile tile1 tile2 = Right (tile1 ++ tile2)
   | otherwise = error "Tiles have different dimentions"
 
+
 --export tile
-evaluateExport x y env = case Map.lookup x (symbolTable env) of
+evaluateExport x (Var y) env = case Map.lookup x (symbolTable env) of
   Just (TileValue tile) -> do
-    let filePath = show y ++ ".tl"
+    let filename  = show y
+    let filePath = y ++".tl"
     writeTilefile filePath tile
     return env
   _ -> error $ "Tile variable not found: " ++ x
@@ -122,12 +126,12 @@ tileToString = unlines . Prelude.map (Prelude.map boolToChar)
 writeTilefile filepath tile = writeFile filepath (tileToString tile)
 
 --import tile
-evaluateImport x y env = do
-  let filepath = show y ++ ".tl"
+evaluateImport x (Var y) env = do
+  let filename  = show y
+  let filepath = y ++".tl"
   tile <- readFileTile filepath
   let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
   return env {symbolTable = newSymbolTable}
-
 parseTile = Prelude.map (Prelude.map (== '1')). lines
 
 readFileTile filePath = catch readSuccess noRead
