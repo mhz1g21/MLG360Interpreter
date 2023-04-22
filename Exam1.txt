@@ -1,8 +1,4 @@
 t1 << tile1;
-t2 << tile2;
-t3 = joinV t1 t2;
-repeat 3 { t3 = joinH t3 t3;
-t4 = joinH t3 t3;};
+t3 = rotate 3 t1;
 t3 >> tile3;
-t4 >> tile4;
 

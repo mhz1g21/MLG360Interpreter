@@ -4,6 +4,7 @@ import System.Environment
 import Control.Exception
 import System.IO
 import Data.Map as Map
+import Data.List
 
 
 main :: IO ()
@@ -61,6 +62,8 @@ evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
   Nothing    -> error ("Undefined variable: " ++ x)
 evalExpToValue (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExpToValue (JoinH e1 e2) env = evaluateJoinH e1 e2 env
+evalExpToValue (Not e) env = evaluateNot e env
+evalExpToValue (Rotate n e) env = evaluateRotate n e env
 
 --operations of expressionss
 -- ################################################
@@ -68,6 +71,37 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--negation of tile
+evaluateNot e env = do
+  tileValue <- evalExpToValue e env
+  case tileValue of
+    TileValue tile -> do
+      let negatedTile = Prelude.map (Prelude.map not) tile
+      return (TileValue negatedTile)
+    _ -> error "The operand of 'not' should be a TileValue" 
+
+--rotate tile
+evaluateRotate n e env = do
+  tileValue <- evalExpToValue e env
+  case tileValue of
+    TileValue tile -> do
+      let rotatedTile = rotateNTimes n tile
+      return (TileValue rotatedTile)
+    _ -> error "The operand of 'rotate' should be a TileValue"
+
+-- Helper function to rotate a tile by 90 degrees
+rotate90Clockwise :: Tile -> Tile
+rotate90Clockwise = Prelude.map reverse . transpose
+
+rotate90Counterclockwise :: Tile -> Tile
+rotate90Counterclockwise = reverse . Prelude.map reverse . transpose
+
+rotateNTimes :: Int -> Tile -> Tile
+rotateNTimes n tile
+  | n == 0 = tile
+  | n > 0 = rotateNTimes (n - 1) (rotate90Clockwise tile)
+  | n < 0 = rotateNTimes (n + 1) (rotate90Counterclockwise tile) 
 
 
 --join tiles horizontally
