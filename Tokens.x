@@ -22,9 +22,16 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
-"¬"	      { \p s -> TNot p }
+"not"	      { \p s -> TNot p }
 "rotate"          { \p s -> TRotate p }
 "scale"           {\ p s -> TScale p }
+"reflectX" { \p s -> TReflectX p }
+"reflectY" { \p s -> TReflectY p }
+"_"        { \p s -> TBlank p }
+"and"      { \p s -> TAnd p}
+"or"       { \p s -> TOr p}
+
+
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }
 $digit+        { \p s -> TNumber p (read s) }
@@ -47,6 +54,11 @@ data Token =
   |TRotate AlexPosn 
   |TScale AlexPosn  
   |TNot AlexPosn
+  |TReflectX AlexPosn
+  |TReflectY AlexPosn
+  |TBlank AlexPosn
+  |TAnd AlexPosn
+  |TOr AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -65,4 +77,9 @@ tokenPosn (TImport (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TExport (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TNot (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TScale (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TReflectX (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TReflectY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

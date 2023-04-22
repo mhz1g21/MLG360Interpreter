@@ -20,9 +20,14 @@ import Tokens
 	';' { TSemiColon $$ }
   '<<' {TImport $$ }
   '>>' {TExport $$ }
-	'¬'  {TNot $$}
+	'not'  {TNot $$}
 	rotate {TRotate $$}
 	scale {TScale $$}
+	reflectX {TReflectX $$}
+	reflectY {TReflectY $$}
+	'_'     {TBlank $$}
+  and     {TAnd $$}
+  or      {TOr $$}
 
 %left 'rotate'
 %left 'repeat'
@@ -32,9 +37,12 @@ import Tokens
 %left ';'
 %left '<<'
 %left '>>'
-%left '¬'
+%left 'not'
 %left 'scale'
-
+%left 'reflectX'
+%left 'reflectY'
+%left 'and'
+%left 'or'
 
 
 %% 
@@ -50,10 +58,14 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
 	| var '=' Exp             {Equals $1 $3}
   | var '<<' Exp           {Import $1 $3}
   | var '>>' Exp           {Export $1 $3}
-	| '¬' Exp                {Not $2}
+	| 'not' Exp                {Not $2}
 	| rotate int Exp         {Rotate $2 $3}
 	| scale int Exp         {Scale $2 $3}
-
+	| reflectX Exp           {ReflectX $2}
+	| reflectY Exp           {ReflectY $2}
+	| '_'                   {Blank}
+	| and Exp Exp          {And $2 $3}
+	| or Exp Exp          {Or $2 $3}
 
 
 { 
@@ -75,5 +87,10 @@ data Exp = Repeat Int ExpSeq
     | Var String
     | Rotate Int Exp
     | Scale Int Exp
+    | ReflectX Exp
+    | ReflectY Exp
+    | Blank
+    | And Exp Exp
+    | Or Exp Exp
          deriving Show 
 } 
