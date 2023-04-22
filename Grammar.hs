@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.20.1.1
+-- parser produced by Happy Version 1.20.0
 
 data HappyAbsSyn t4 t5
 	= HappyTerminal (Token)
@@ -15,7 +15,7 @@ data HappyAbsSyn t4 t5
 	| HappyAbsSyn5 t5
 
 happyExpList :: Happy_Data_Array.Array Prelude.Int Prelude.Int
-happyExpList = Happy_Data_Array.listArray (0,77) ([3040,2044,49342,127,128,4096,0,3040,2044,49342,127,0,16384,48,3040,2044,49342,127,1,4096,0,3040,2044,49342,57471,64523,48647,32704,3040,2044,16,0,0,0,8,3040,2044,49342,57471,64523,48647,32704,0,0,0,0,0,48640,32704,3040,2044,0,0,16,48640,32704,3040,2044,49342,57471,64523,48647,32704,8192,0,49342,127,0,48640,32704,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57344,64523,7,0,16384,0,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,76) ([3040,2044,49342,127,128,4096,0,3040,2044,49342,127,0,16384,48,3040,2044,49342,127,1,4096,0,3040,2044,49342,57471,64523,48647,32704,3040,2044,16,0,0,0,8,3040,2044,49342,57471,64523,48647,32704,0,0,0,0,0,48640,32704,3040,2044,0,0,16,48640,32704,3040,2044,49342,57471,64523,48647,32704,8192,0,49342,127,0,48640,32704,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
@@ -507,7 +507,7 @@ action_39 (24) = happyShift action_14
 action_39 (25) = happyShift action_15
 action_39 (26) = happyShift action_16
 action_39 (27) = happyShift action_17
-action_39 (4) = happyGoto action_52
+action_39 (4) = happyGoto action_51
 action_39 (5) = happyGoto action_19
 action_39 _ = happyFail (happyExpListPerState 39)
 
@@ -531,30 +531,12 @@ action_48 _ = happyReduce_18
 
 action_49 _ = happyReduce_19
 
-action_50 (6) = happyShift action_3
-action_50 (7) = happyShift action_4
-action_50 (8) = happyShift action_5
-action_50 (9) = happyShift action_6
-action_50 (10) = happyShift action_7
-action_50 (12) = happyShift action_8
-action_50 (19) = happyShift action_9
-action_50 (20) = happyShift action_10
-action_50 (21) = happyShift action_11
-action_50 (22) = happyShift action_12
-action_50 (23) = happyShift action_13
-action_50 (24) = happyShift action_14
-action_50 (25) = happyShift action_15
-action_50 (26) = happyShift action_16
-action_50 (27) = happyShift action_17
-action_50 (5) = happyGoto action_51
-action_50 _ = happyFail (happyExpListPerState 50)
+action_50 _ = happyReduce_20
 
-action_51 _ = happyReduce_20
+action_51 (15) = happyShift action_52
+action_51 _ = happyFail (happyExpListPerState 51)
 
-action_52 (15) = happyShift action_53
-action_52 _ = happyFail (happyExpListPerState 52)
-
-action_53 _ = happyReduce_3
+action_52 _ = happyReduce_3
 
 happyReduce_1 = happySpecReduce_3  4 happyReduction_1
 happyReduction_1 (HappyAbsSyn4  happy_var_3)
@@ -720,15 +702,14 @@ happyReduction_19 (HappyAbsSyn5  happy_var_3)
 	)
 happyReduction_19 _ _ _  = notHappyAtAll 
 
-happyReduce_20 = happyReduce 4 5 happyReduction_20
-happyReduction_20 ((HappyAbsSyn5  happy_var_4) `HappyStk`
-	(HappyAbsSyn5  happy_var_3) `HappyStk`
-	(HappyTerminal (TNumber (AlexPn x y z) happy_var_2)) `HappyStk`
-	_ `HappyStk`
-	happyRest)
-	 = HappyAbsSyn5
-		 (Subtile happy_var_2 happy_var_3 happy_var_4
-	) `HappyStk` happyRest
+happyReduce_20 = happySpecReduce_3  5 happyReduction_20
+happyReduction_20 (HappyAbsSyn5  happy_var_3)
+	(HappyTerminal (TNumber (AlexPn x y z) happy_var_2))
+	_
+	 =  HappyAbsSyn5
+		 (Subtile happy_var_2 happy_var_3
+	)
+happyReduction_20 _ _ _  = notHappyAtAll 
 
 happyNewToken action sts stk [] =
 	action 28 28 notHappyAtAll (HappyState action) sts stk []
@@ -816,7 +797,7 @@ data Exp = Repeat Int ExpSeq
     | Blank Exp
     | And Exp Exp
     | Or Exp Exp
-    | Subtile Int Exp Exp
+    | Subtile Int Exp
          deriving Show
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
