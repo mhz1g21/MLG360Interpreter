@@ -1,4 +1,3 @@
 t1 << tile1;
-t3 = rotate 3 t1;
+t3 = reflectX t1;
 t3 >> tile3;
-
