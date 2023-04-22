@@ -64,6 +64,7 @@ evalExpToValue (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExpToValue (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 evalExpToValue (Not e) env = evaluateNot e env
 evalExpToValue (Rotate n e) env = evaluateRotate n e env
+evalExpToValue (Scale n e) env = evaluateScale n e env
 
 --operations of expressionss
 -- ################################################
@@ -90,7 +91,6 @@ evaluateRotate n e env = do
       return (TileValue rotatedTile)
     _ -> error "The operand of 'rotate' should be a TileValue"
 
--- Helper function to rotate a tile by 90 degrees
 rotate90Clockwise :: Tile -> Tile
 rotate90Clockwise = Prelude.map reverse . transpose
 
@@ -103,9 +103,21 @@ rotateNTimes n tile
   | n > 0 = rotateNTimes (n - 1) (rotate90Clockwise tile)
   | n < 0 = rotateNTimes (n + 1) (rotate90Counterclockwise tile) 
 
+--scale tile
+evaluateScale n e env = do
+  tileValue <- evalExpToValue e env
+  case tileValue of
+    TileValue tile -> do
+      let scaledTile = scaleNTimes n tile
+      return (TileValue scaledTile)
+    _ -> error "The operand of 'scale' should be a TileValue"
+
+-- Helper function to scale a tile by a factor of n
+scaleNTimes :: Int -> Tile -> Tile
+scaleNTimes n tile = concatMap (replicate n) (Prelude.map (concatMap (replicate n)) tile) 
+
 
 --join tiles horizontally
-
 evaluateJoinH e1 e2 env = do
   tile1 <- evalExpToValue e1 env
   tile2 <- evalExpToValue e2 env
