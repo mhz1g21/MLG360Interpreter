@@ -65,6 +65,9 @@ evalExpToValue (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 evalExpToValue (Not e) env = evaluateNot e env
 evalExpToValue (Rotate n e) env = evaluateRotate n e env
 evalExpToValue (Scale n e) env = evaluateScale n e env
+evalExpToValue (ReflectY e) env = evaluateReflectY e env
+evalExpToValue (ReflectX e) env = evaluateReflectX e env
+evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
 -- ################################################
@@ -72,6 +75,28 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--reflect tile y axis
+evaluateReflectY e env = do
+  tileValue <- evalExpToValue e env
+  case tileValue of
+    TileValue tile -> do
+      let reflectedTile = reflectYTile tile
+      return (TileValue reflectedTile)
+    _ -> error "The operand of 'reflectY' should be a TileValue"
+
+reflectYTile = Prelude.map reverse
+
+--reflect tile x axis
+evaluateReflectX e env = do
+  tileValue <- evalExpToValue e env
+  case tileValue of
+    TileValue tile -> do
+      let reflectedTile = reflectXTile tile
+      return (TileValue reflectedTile)
+    _ -> error "The operand of 'reflectX' should be a TileValue"
+
+reflectXTile = reverse
 
 --negation of tile
 evaluateNot e env = do
