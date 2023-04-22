@@ -3,11 +3,7 @@ import Grammar
 import System.Environment
 import Control.Exception
 import System.IO
-import Data.Map
-import qualified Data.Map as Map
-
-
-
+import Data.Map as Map
 
 
 main :: IO ()
@@ -60,16 +56,22 @@ evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 evalExp (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
-evalExp (Int x ) env = undefined
-evalExp (Var x) env = undefined
-evalExp (RepeatH n e) env = undefined
-evalExp (RepeatV n e) env = undefined
+evalExp _ _ = error "Not implemented"
+
+evalExpToValue (Int n) _ = return (IntValue n)
+evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
+  Just value -> return value
+  Nothing    -> error ("Undefined variable: " ++ x)
+
 
 
 --operations of expressionss
 -- ################################################
-evaluateEquals :: String -> Exp -> Enviroment -> IO Enviroment
-evaluateEquals x e env = undefined
+evaluateEquals x e env = do
+  value <- evalExpToValue e env
+  let updatedSymbolTable = Map.insert x value (symbolTable env)
+  return (env { symbolTable = updatedSymbolTable })
+
 
 --join tiles horizontally
 
