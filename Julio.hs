@@ -69,6 +69,7 @@ evalExpToValue (ReflectY e) env = evaluateReflectY e env
 evalExpToValue (ReflectX e) env = evaluateReflectX e env
 evalExpToValue (And e1 e2) env = evaluateAnd e1 e2 env
 evalExpToValue(Blank e) env = evaluateBlank e env
+evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
 evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
@@ -77,6 +78,18 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--evaluate or operation
+evaluateOr e1 e2 env = do
+  tileValue1 <- evalExpToValue e1 env
+  tileValue2 <- evalExpToValue e2 env
+  case (tileValue1, tileValue2) of
+    (TileValue tile1, TileValue tile2) -> do
+      let resultTile = orTiles tile1 tile2
+      return (TileValue resultTile)
+    _ -> error "The operands of 'or' should be TileValues"
+
+orTiles tile1 tile2 = zipWith (zipWith (||)) tile1 tile2
 
 --create blank tile
 evaluateBlank e env = do
