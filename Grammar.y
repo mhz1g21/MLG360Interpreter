@@ -20,7 +20,7 @@ import Tokens
 	';' { TSemiColon $$ }
   '<<' {TImport $$ }
   '>>' {TExport $$ }
-	'¬'  {TNot $$}
+	'not'  {TNot $$}
 	rotate {TRotate $$}
 	scale {TScale $$}
 
@@ -32,7 +32,7 @@ import Tokens
 %left ';'
 %left '<<'
 %left '>>'
-%left '¬'
+%left 'not'
 %left 'scale'
 
 
@@ -50,7 +50,7 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
 	| var '=' Exp             {Equals $1 $3}
   | var '<<' Exp           {Import $1 $3}
   | var '>>' Exp           {Export $1 $3}
-	| '¬' Exp                {Not $2}
+	| 'not' Exp                {Not $2}
 	| rotate int Exp         {Rotate $2 $3}
 	| scale int Exp         {Scale $2 $3}
 
