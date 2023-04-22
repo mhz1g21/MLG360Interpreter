@@ -68,6 +68,7 @@ evalExpToValue (Scale n e) env = evaluateScale n e env
 evalExpToValue (ReflectY e) env = evaluateReflectY e env
 evalExpToValue (ReflectX e) env = evaluateReflectX e env
 evalExpToValue (And e1 e2) env = evaluateAnd e1 e2 env
+evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
@@ -76,6 +77,17 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--create blank tile
+evaluateBlank e env = do
+  referenceTileValue <- evalExpToValue e env
+  case referenceTileValue of
+    TileValue referenceTile -> do
+      let numRows = length referenceTile
+      let numCols = length (head referenceTile)
+      let blankTile = replicate numRows (replicate numCols False)
+      return (TileValue blankTile)
+    _ -> error "The operand of 'blank' should be a TileValue"
 
 --evaluate and operation
 evaluateAnd e1 e2 env = do
