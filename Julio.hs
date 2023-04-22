@@ -70,6 +70,7 @@ evaluateEquals :: String -> Exp -> Enviroment -> IO Enviroment
 evaluateEquals x e env = undefined
 
 --join tiles horizontally
+
 evaluateJoinH e1 e2 env = do
   newEnv1 <- evalExp e1 env
   newEnv2 <- evalExp e2 newEnv1 {stack = tail $ stack newEnv1}
