@@ -49,11 +49,7 @@ evalExpSeq (ExpSeq e es) env = do
   newEnv <- evalExp e env
   evalExpSeq es newEnv
 
-
-
 evalExp (Equals x e) env = evaluateEquals x e env
-evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
-evalExp (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
 evalExp _ _ = error "Not implemented"
@@ -62,8 +58,7 @@ evalExpToValue (Int n) _ = return (IntValue n)
 evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
   Just value -> return value
   Nothing    -> error ("Undefined variable: " ++ x)
-
-
+evalExpToValue (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 
 --operations of expressionss
 -- ################################################
@@ -93,22 +88,15 @@ joinTilesH tile1 tile2
 
 --join tiles vertically
 evaluateJoinV e1 e2 env = do
-  newEnv1 <- evalExp e1 env
-  newEnv2 <- evalExp e2 newEnv1 {stack = tail $ stack newEnv1}
-  let tile1 = head $ stack newEnv2
-  let tile2 = head $ tail $ stack newEnv2
-  case (tile1,tile2) of
-    (TileValue t1, TileValue t2) -> case joinTilesV t1 t2 of
-      Right newTile -> return newEnv2 {stack = TileValue newTile : Prelude.drop 2 (stack newEnv2)}
-      Left err -> do
-        error $ "Tiles have different dimentions: " ++ err
-    _ -> error "expected tiles for joinV"
+  tile1 <- evalExpToValue e1 env
+  tile2 <- evalExpToValue e2 env
+  case (tile1, tile2) of
+    (TileValue t1, TileValue t2) -> do
+      let joinedTile = joinTilesV t1 t2
+      return (TileValue joinedTile)
+    _ -> error "Both operands of joinV should be TileValues"
   
-
- 
-joinTilesV tile1 tile2
-  | validateTile tile1 tile2 = Right (tile1 ++ tile2)
-  | otherwise = error "Tiles have different dimentions"
+joinTilesV t1 t2 = t1 ++ t2
 
 
 --export tile
