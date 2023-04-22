@@ -22,6 +22,7 @@ import Tokens
   '>>' {TExport $$ }
 	'¬'  {TNot $$}
 	rotate {TRotate $$}
+	scale {TScale $$}
 
 %left 'rotate'
 %left 'repeat'
@@ -32,6 +33,7 @@ import Tokens
 %left '<<'
 %left '>>'
 %left '¬'
+%left 'scale'
 
 
 
@@ -50,6 +52,7 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
   | var '>>' Exp           {Export $1 $3}
 	| '¬' Exp                {Not $2}
 	| rotate int Exp         {Rotate $2 $3}
+	| scale int Exp         {Scale $2 $3}
 
 
 
@@ -71,5 +74,6 @@ data Exp = Repeat Int ExpSeq
     | Int Int
     | Var String
     | Rotate Int Exp
+    | Scale Int Exp
          deriving Show 
 } 
