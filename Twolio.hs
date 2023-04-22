@@ -25,8 +25,6 @@ parsing lexedProg = do
 
 
 doEnviroment parsedProg = do
-  putStrLn ("Evaluating : "++show parsedProg)
-  putStrLn ("initEnv : "++ show initEnv)
   finalEnv <- evalExpSeq parsedProg initEnv
   putStrLn(show(head $ stack finalEnv))
   putStrLn ("Finished with Enviroment")
@@ -62,16 +60,17 @@ data Value = TileValue Tile
 
 
 evalExpSeq :: ExpSeq -> Enviroment -> IO Enviroment
-evalExpSeq (Exp e) env = trace ("My name is Jef") evalExp e env
+evalExpSeq (Exp e) env = trace ("No more recursion") evalExp e env
 evalExpSeq (ExpSeq e es) env = do
-  putStrLn "We got here"
   newEnv <- evalExp e env
   evalExpSeq es newEnv
 evalExpSeq _ _ = do
-            putStrLn "Oh shit" 
             return initEnv
 
 evalExp (JoinH e1 e2) env = evaluateJoinH e1 e2 env
+evalExp (Import x y) env = evaluateImport x y env
+evalExp _ _ = do 
+          return initEnv
 
 
 --join tiles horizontally
@@ -99,7 +98,7 @@ validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prel
 
 
 --import tile
-evaluateImport x y env = do
+evaluateImport x (Var y) env = do
   let filepath = show y ++ ".tl"
   tile <- readFileTile filepath
   let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
