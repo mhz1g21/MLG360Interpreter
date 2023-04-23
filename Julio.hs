@@ -7,6 +7,7 @@ import Data.Map as Map
 import Data.List
 
 
+
 main :: IO ()
 main = catch lexing noLex
 
@@ -70,6 +71,7 @@ evalExpToValue (ReflectX e) env = evaluateReflectX e env
 evalExpToValue (And e1 e2) env = evaluateAnd e1 e2 env
 evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
+evalExpToValue (Subtile x y size tile) env = evaluateSubtile x y size tile env
 evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
@@ -78,6 +80,22 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+--subtile operation
+evaluateSubtile x y size tileExp env = do
+  let xValue = IntValue x
+  yValue <- evalExpToValue y env
+  sizeValue <- evalExpToValue size env
+  tileValue <- evalExpToValue tileExp env
+
+  case (xValue, yValue, sizeValue, tileValue) of
+    (IntValue xInt, IntValue yInt, IntValue sizeInt, TileValue tile) -> do
+      let subTile = subTileFromTile xInt yInt sizeInt tile
+      return (TileValue subTile)
+    _ -> error "Invalid operands for 'subtile' operation"
+
+
+subTileFromTile x y size tile = Data.List.take size . Prelude.map (Data.List.take size . Data.List.drop x) . Data.List.drop y $ tile
 
 --evaluate or operation
 evaluateOr e1 e2 env = do
