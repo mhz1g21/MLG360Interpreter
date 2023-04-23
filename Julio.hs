@@ -72,6 +72,7 @@ evalExpToValue (And e1 e2) env = evaluateAnd e1 e2 env
 evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
 evalExpToValue (Subtile x y size tile) env = evaluateSubtile x y size tile env
+evalExpToValue (Gibb x y pasteTile baseTile) env = evaluateGibb x y pasteTile baseTile env
 evalExpToValue _ _ = error "undefined operation"
 
 --operations of expressionss
@@ -80,6 +81,30 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+evaluateGibb x y pasteTile baseTile env = do
+  let xValue = IntValue x
+  yValue <- evalExpToValue y env
+  pasteTileValue <- evalExpToValue pasteTile env
+  baseTileValue <- evalExpToValue baseTile env
+  case (xValue, yValue, pasteTileValue, baseTileValue) of
+    (IntValue xInt, IntValue yInt, TileValue toPasteTile, TileValue baseTile) -> do
+      let resultTile = pasteTheTile xInt yInt toPasteTile baseTile
+      return (TileValue resultTile)
+    _ -> error "Invalid operands for 'gibb' operation"
+
+
+pasteTheTile :: Int -> Int -> [[Bool]] -> [[Bool]] -> [[Bool]]
+pasteTheTile x y tileToPaste baseTile = zipWith mergeRows baseTile (shiftedTile ++ repeat emptyRow)
+  where
+    emptyRow = repeat False
+    shiftedTile = (replicate y emptyRow) ++ (Prelude.map (shiftRow x) tileToPaste)
+    shiftRow :: Int -> [Bool] -> [Bool]
+    shiftRow n row = (replicate n False) ++ row ++ (replicate (width - n - length row) False)
+    width = length (head baseTile)
+    mergeRows :: [Bool] -> [Bool] -> [Bool]
+    mergeRows baseRow pasteRow = zipWith (||) baseRow pasteRow
+    
 
 --subtile operation
 evaluateSubtile x y size tileExp env = do
@@ -93,7 +118,6 @@ evaluateSubtile x y size tileExp env = do
       let subTile = subTileFromTile xInt yInt sizeInt tile
       return (TileValue subTile)
     _ -> error "Invalid operands for 'subtile' operation"
-
 
 subTileFromTile x y size tile = Data.List.take size . Prelude.map (Data.List.take size . Data.List.drop x) . Data.List.drop y $ tile
 

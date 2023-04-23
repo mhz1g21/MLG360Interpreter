@@ -1,3 +1,4 @@
 t1 << tile1;
-t3 = subtile 1 1 2 t1;
+t2 << tile2;
+t3 = gibb 1 1 t2 t1;
 t3 >> tile3;
