@@ -31,6 +31,7 @@ $white+         ;
 "and"      { \p s -> TAnd p}
 "or"       { \p s -> TOr p}
 "subtile"  { \p s -> TSubtile p}
+"gibb"     { \p s -> TGibb p}
 
 
 
@@ -61,6 +62,7 @@ data Token =
   |TAnd AlexPosn
   |TOr AlexPosn
   |TSubtile AlexPosn
+  |TGibb AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -85,4 +87,5 @@ tokenPosn (TBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSubtile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TGibb (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

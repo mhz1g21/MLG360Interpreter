@@ -29,6 +29,7 @@ import Tokens
   and     {TAnd $$}
   or      {TOr $$}
   subtile {TSubtile $$}
+  gibb    {TGibb $$}
 
 %left 'rotate'
 %left 'repeat'
@@ -45,6 +46,7 @@ import Tokens
 %left 'and'
 %left 'or'
 %left 'subtile'
+%left 'gibb'
 
 
 %% 
@@ -69,6 +71,7 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | and Exp Exp              { And $2 $3 }
     | or Exp Exp               { Or $2 $3 }
     | subtile int Exp Exp Exp      { Subtile $2 $3 $4 $5}
+    | gibb int Exp Exp Exp      {Gibb $2 $3 $4 $5}
 
 
 { 
@@ -96,5 +99,6 @@ data Exp = Repeat Int ExpSeq
     | And Exp Exp
     | Or Exp Exp
     | Subtile Int Exp Exp Exp
+    | Gibb Int Exp Exp Exp
          deriving Show 
 } 
