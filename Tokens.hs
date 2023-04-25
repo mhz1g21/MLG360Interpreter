@@ -160,7 +160,7 @@ alexGetByte (AlexInput {alexStr=cs,alexBytePos=n}) =
 -- Token positions
 
 -- `Posn' records the location of a token in the input text.  It has three
--- fields: the address (number of characters preceding the token), line number
+-- fields: the address (number of chacaters preceding the token), line number
 -- and column of a token within the file. `start_pos' gives the position of the
 -- start of the file and `eof_pos' a standard encoding for the end of file.
 -- `move_pos' calculates the new position after traversing a given character,
@@ -18545,10 +18545,9 @@ alex_scan_tkn user__ orig_input len input__ s last_acc =
         let
                 base   = alexIndexInt32OffAddr alex_base s
                 offset = PLUS(base,ord_c)
+                check  = alexIndexInt16OffAddr alex_check offset
 
-                new_s = if GTE(offset,ILIT(0))
-                          && let check  = alexIndexInt16OffAddr alex_check offset
-                             in  EQ(check,ord_c)
+                new_s = if GTE(offset,ILIT(0)) && EQ(check,ord_c)
                           then alexIndexInt16OffAddr alex_table offset
                           else alexIndexInt16OffAddr alex_deflt s
         in
