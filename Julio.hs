@@ -41,7 +41,7 @@ initEnv = Enviroment [] empty
 type Tile = [[Bool]]
 
 data Value = TileValue Tile 
-  | IntValue Int deriving Show
+  | IntValue Int deriving (Show,Eq)
 
 --evaluator
 -- ######################################################################################################################
