@@ -18608,6 +18608,7 @@ data Token =
   |TAdd AlexPosn
   |TSub AlexPosn
   |TBoolean AlexPosn Bool
+  |TNothing AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -18647,6 +18648,7 @@ tokenPosn (TAdd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSub (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TNothing (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 alex_action_2 = \p s -> TEquals p
 alex_action_3 = \p s -> TImport p
 alex_action_4 = \p s -> TExport p

@@ -90,6 +90,7 @@ data Token =
   |TAdd AlexPosn
   |TSub AlexPosn
   |TBoolean AlexPosn Bool
+  |TNothing AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -129,4 +130,5 @@ tokenPosn (TAdd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSub (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TNothing (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }
