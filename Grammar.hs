@@ -868,11 +868,11 @@ action_36 (42) = happyShift action_31
 action_36 (5) = happyGoto action_84
 action_36 _ = happyFail (happyExpListPerState 36)
 
-action_37 _ = happyReduce_33
+action_37 _ = happyReduce_32
 
-action_38 _ = happyReduce_32
+action_38 _ = happyReduce_31
 
-action_39 _ = happyReduce_31
+action_39 _ = happyReduce_30
 
 action_40 (14) = happyShift action_83
 action_40 _ = happyFail (happyExpListPerState 40)
@@ -1600,9 +1600,9 @@ action_83 (4) = happyGoto action_86
 action_83 (5) = happyGoto action_33
 action_83 _ = happyFail (happyExpListPerState 83)
 
-action_84 _ = happyReduce_34
+action_84 _ = happyReduce_33
 
-action_85 _ = happyReduce_35
+action_85 _ = happyReduce_34
 
 action_86 (15) = happyShift action_95
 action_86 _ = happyFail (happyExpListPerState 86)
@@ -1683,10 +1683,10 @@ action_92 _ = happyReduce_20
 
 action_93 _ = happyReduce_21
 
-action_94 _ = happyReduce_30
+action_94 _ = happyReduce_29
 
 action_95 (37) = happyShift action_96
-action_95 _ = happyReduce_28
+action_95 _ = happyFail (happyExpListPerState 95)
 
 action_96 (14) = happyShift action_97
 action_96 _ = happyFail (happyExpListPerState 96)
@@ -1727,7 +1727,7 @@ action_97 _ = happyFail (happyExpListPerState 97)
 action_98 (15) = happyShift action_99
 action_98 _ = happyFail (happyExpListPerState 98)
 
-action_99 _ = happyReduce_29
+action_99 _ = happyReduce_28
 
 happyReduce_1 = happySpecReduce_3  4 happyReduction_1
 happyReduction_1 (HappyAbsSyn4  happy_var_3)
@@ -1965,19 +1965,8 @@ happyReduction_27 (HappyAbsSyn5  happy_var_3)
 	)
 happyReduction_27 _ _ _  = notHappyAtAll 
 
-happyReduce_28 = happyReduce 5 5 happyReduction_28
+happyReduce_28 = happyReduce 9 5 happyReduction_28
 happyReduction_28 (_ `HappyStk`
-	(HappyAbsSyn4  happy_var_4) `HappyStk`
-	_ `HappyStk`
-	(HappyAbsSyn5  happy_var_2) `HappyStk`
-	_ `HappyStk`
-	happyRest)
-	 = HappyAbsSyn5
-		 (If happy_var_2 happy_var_4
-	) `HappyStk` happyRest
-
-happyReduce_29 = happyReduce 9 5 happyReduction_29
-happyReduction_29 (_ `HappyStk`
 	(HappyAbsSyn4  happy_var_8) `HappyStk`
 	_ `HappyStk`
 	_ `HappyStk`
@@ -1991,8 +1980,8 @@ happyReduction_29 (_ `HappyStk`
 		 (If happy_var_2 happy_var_4 Else happy_var_8
 	) `HappyStk` happyRest
 
-happyReduce_30 = happyReduce 5 5 happyReduction_30
-happyReduction_30 (_ `HappyStk`
+happyReduce_29 = happyReduce 5 5 happyReduction_29
+happyReduction_29 (_ `HappyStk`
 	(HappyAbsSyn4  happy_var_4) `HappyStk`
 	_ `HappyStk`
 	(HappyAbsSyn5  happy_var_2) `HappyStk`
@@ -2002,11 +1991,19 @@ happyReduction_30 (_ `HappyStk`
 		 (While happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
+happyReduce_30 = happySpecReduce_2  5 happyReduction_30
+happyReduction_30 (HappyAbsSyn5  happy_var_2)
+	_
+	 =  HappyAbsSyn5
+		 (Width happy_var_2
+	)
+happyReduction_30 _ _  = notHappyAtAll 
+
 happyReduce_31 = happySpecReduce_2  5 happyReduction_31
 happyReduction_31 (HappyAbsSyn5  happy_var_2)
 	_
 	 =  HappyAbsSyn5
-		 (Width happy_var_2
+		 (Height happy_var_2
 	)
 happyReduction_31 _ _  = notHappyAtAll 
 
@@ -2014,35 +2011,27 @@ happyReduce_32 = happySpecReduce_2  5 happyReduction_32
 happyReduction_32 (HappyAbsSyn5  happy_var_2)
 	_
 	 =  HappyAbsSyn5
-		 (Height happy_var_2
+		 (Print happy_var_2
 	)
 happyReduction_32 _ _  = notHappyAtAll 
 
-happyReduce_33 = happySpecReduce_2  5 happyReduction_33
-happyReduction_33 (HappyAbsSyn5  happy_var_2)
+happyReduce_33 = happySpecReduce_3  5 happyReduction_33
+happyReduction_33 (HappyAbsSyn5  happy_var_3)
+	(HappyAbsSyn5  happy_var_2)
 	_
 	 =  HappyAbsSyn5
-		 (Print happy_var_2
+		 (Add happy_var_2 happy_var_3
 	)
-happyReduction_33 _ _  = notHappyAtAll 
+happyReduction_33 _ _ _  = notHappyAtAll 
 
 happyReduce_34 = happySpecReduce_3  5 happyReduction_34
 happyReduction_34 (HappyAbsSyn5  happy_var_3)
 	(HappyAbsSyn5  happy_var_2)
 	_
 	 =  HappyAbsSyn5
-		 (Add happy_var_2 happy_var_3
-	)
-happyReduction_34 _ _ _  = notHappyAtAll 
-
-happyReduce_35 = happySpecReduce_3  5 happyReduction_35
-happyReduction_35 (HappyAbsSyn5  happy_var_3)
-	(HappyAbsSyn5  happy_var_2)
-	_
-	 =  HappyAbsSyn5
 		 (Sub happy_var_2 happy_var_3
 	)
-happyReduction_35 _ _ _  = notHappyAtAll 
+happyReduction_34 _ _ _  = notHappyAtAll 
 
 happyNewToken action sts stk [] =
 	action 43 43 notHappyAtAll (HappyState action) sts stk []

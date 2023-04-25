@@ -107,7 +107,6 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | gt Exp Exp             { GreaterThan $1 $3 }
     | eq Exp Exp             {IsEqual $2 $3}
     | neq Exp Exp           {NotEqual $2 $3}
-    | if Exp '{' ExpSeq '}'   {If $2 $4}
     | if Exp '{' ExpSeq '}' else '{' ExpSeq '}'   {If $2 $4 Else $8}
     | while Exp '{' ExpSeq '}'    {While $2 $4 }
     | width Exp              {Width $2}
