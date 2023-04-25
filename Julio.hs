@@ -128,11 +128,14 @@ evaluatePrint e env = do
   case value of
     IntValue i    -> do
       putStrLn (show i)
+      return env
     BoolValue b   -> do
       putStrLn (show b)
+      return env
     TileValue tile -> do
       let tileAsOnesAndZeros = [ [ if b then 1 else 0 | b <- row ] | row <- tile ]
       mapM_ print tileAsOnesAndZeros
+      return env
     _ -> error "The 'Print' function expects a Var, Int or Bool value or a variable referring to such values"
 
 
