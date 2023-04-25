@@ -53,6 +53,7 @@ evalExpSeq (Exp e) env = evalExp e env
 evalExpSeq (ExpSeq e es) env = do
   newEnv <- evalExp e env
   evalExpSeq es newEnv
+evalExpSeq None env = return env
 
 evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
@@ -60,6 +61,7 @@ evalExp (Import x y) env = evaluateImport x y env
 evalExp (Repeat n e) env = evaluateRepeat n e env
 evalExp (Print e) env = evaluatePrint e env
 evalExp (While cond expSeq) env = evaluateWhile cond expSeq env
+evalExp (If condition trueExpSeq falseExpSeq) env = evaluateIf condition trueExpSeq falseExpSeq env
 evalExp e _ = error ("invalid use of expression" ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
@@ -95,6 +97,14 @@ evaluateEquals x e env = do
   value <- evalExpToValue e env
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
+
+evaluateIf condition trueExpSeq falseExpSeq env = do
+  value <- evalExpToValue condition env
+  case value of
+    BoolValue b -> if b
+      then evalExpSeq trueExpSeq env
+      else evalExpSeq falseExpSeq env
+    _ -> error "The 'If' condition expects a Bool value or a variable/expression referring to a Bool value"
 
 -- subtraction of ints
 evaluateSub exp1 exp2 env = do
