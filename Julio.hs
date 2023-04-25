@@ -62,7 +62,8 @@ evalExp (Repeat n e) env = evaluateRepeat n e env
 evalExp (Print e) env = evaluatePrint e env
 evalExp (While cond expSeq) env = evaluateWhile cond expSeq env
 evalExp (If condition trueExpSeq falseExpSeq) env = evaluateIf condition trueExpSeq falseExpSeq env
-evalExp e _ = error ("invalid use of expression" ++ show e)
+evalExp None _ = return initEnv
+evalExp e _ = error ("invalid use of expression " ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
 evalExpToValue (Bool b) _ = return (BoolValue b)
