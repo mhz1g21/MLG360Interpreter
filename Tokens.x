@@ -22,6 +22,7 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
+"nothing"     { \p s -> TNothing p}
 "not"	      { \p s -> TNot p }
 "rotate"          { \p s -> TRotate p }
 "scale"           {\ p s -> TScale p }
@@ -32,7 +33,20 @@ $white+         ;
 "or"       { \p s -> TOr p}
 "subtile"  { \p s -> TSubtile p}
 "gibb"     { \p s -> TGibb p}
-
+"lt"       { \p s -> TLessThan p}
+"gt"       { \p s -> TGreaterThan p}
+"eq"       { \p s -> TIsEqual p}
+"neq"      { \p s -> TNotEqual p}
+"while"    { \p s -> TWhile p}
+"if"       { \p s -> TIf p}
+"else"     { \p s -> TElse p}
+"width"    { \p s -> TWidth p}
+"height"   { \p s -> THeight p}
+"print"    { \p s -> TPrint p}
+"+"        { \p s -> TAdd p}
+"-"        { \p s -> TSub p}
+"true"     { \p s -> TBoolean p True}
+"false"    { \p s -> TBoolean p False}
 
 
 $alpha [$alpha $digit \_ \']*   { \p s -> TIdentifier p s }
@@ -63,6 +77,19 @@ data Token =
   |TOr AlexPosn
   |TSubtile AlexPosn
   |TGibb AlexPosn
+  |TLessThan AlexPosn
+  |TGreaterThan AlexPosn
+  |TIsEqual AlexPosn
+  |TNotEqual AlexPosn
+  |TWhile AlexPosn
+  |TIf AlexPosn
+  |TElse AlexPosn
+  |TWidth AlexPosn
+  |THeight AlexPosn
+  |TPrint AlexPosn
+  |TAdd AlexPosn
+  |TSub AlexPosn
+  |TBoolean AlexPosn Bool
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -88,4 +115,18 @@ tokenPosn (TAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSubtile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TGibb (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TLessThan (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TGreaterThan (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TIsEqual (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TNotEqual (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TWidth (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (THeight (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TPrint(AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TAdd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TSub (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

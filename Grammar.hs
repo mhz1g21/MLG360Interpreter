@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.20.0
+-- parser produced by Happy Version 1.20.1.1
 
 data HappyAbsSyn t4 t5
 	= HappyTerminal (Token)
@@ -1916,18 +1916,16 @@ happyReduction_21 ((HappyAbsSyn5  happy_var_5) `HappyStk`
 	) `HappyStk` happyRest
 
 happyReduce_22 = happySpecReduce_1  5 happyReduction_22
-happyReduction_22 (HappyTerminal (TBool (AlexPn x y z) happy_var_1))
+happyReduction_22 _
 	 =  HappyAbsSyn5
-		 (Bool happy_var_1
+		 (Bool True
 	)
-happyReduction_22 _  = notHappyAtAll 
 
 happyReduce_23 = happySpecReduce_1  5 happyReduction_23
-happyReduction_23 (HappyTerminal (TBool (AlexPn x y z) happy_var_1))
+happyReduction_23 _
 	 =  HappyAbsSyn5
-		 (Bool happy_var_1
+		 (Bool False
 	)
-happyReduction_23 _  = notHappyAtAll 
 
 happyReduce_24 = happySpecReduce_3  5 happyReduction_24
 happyReduction_24 (HappyAbsSyn5  happy_var_3)

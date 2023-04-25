@@ -101,8 +101,8 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | or Exp Exp               { Or $2 $3 }
     | subtile int Exp Exp Exp  { Subtile $2 $3 $4 $5}
     | gibb int Exp Exp Exp     { Gibb $2 $3 $4 $5}
-    | true                     { Bool $1 }
-    | false                    { Bool $1 }
+    | true                     { Bool True }
+    | false                    { Bool False }
     | lt Exp Exp               { LessThan $2 $3 }
     | gt Exp Exp             { GreaterThan $1 $3 }
     | eq Exp Exp             {IsEqual $2 $3}
