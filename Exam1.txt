@@ -1,3 +1,4 @@
 t1 << tile1;
-t2 = _ 1;
-t2 >> tile3;
+t2 << tile2;
+t2 = joinV t1 1;
+t2 >> t2;

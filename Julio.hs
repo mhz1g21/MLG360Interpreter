@@ -9,6 +9,7 @@ import System.Exit
 
 
 
+
 main :: IO ()
 main = catch lexing noLex
 
@@ -23,7 +24,7 @@ lexing = do
 parsing lexedProg = do 
   let parsedProg = parseJulio lexedProg
   putStrLn ("Parsed as " ++ (show parsedProg))
-  doEnviroment parsedProg
+  catch (doEnviroment parsedProg) runtimeError
 
 
 doEnviroment parsedProg = do
@@ -56,7 +57,7 @@ evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
 evalExp (Repeat n e) env = evaluateRepeat n e env
-evalExp e _ = die ("invalid use of expression" ++ show e)
+evalExp e _ = error ("invalid use of expression" ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
 evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
@@ -74,7 +75,7 @@ evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
 evalExpToValue (Subtile x y size tile) env = evaluateSubtile x y size tile env
 evalExpToValue (Gibb x y pasteTile baseTile) env = evaluateGibb x y pasteTile baseTile env
-evalExpToValue e _ = die "invalide use of assignment expressions"
+evalExpToValue e _ = error "invalide use of assignment expressions"
 
 --operations of expressionss
 -- ################################################
@@ -92,7 +93,7 @@ evaluateGibb x y pasteTile baseTile env = do
     (IntValue xInt, IntValue yInt, TileValue toPasteTile, TileValue baseTile) -> do
       let resultTile = pasteTheTile xInt yInt toPasteTile baseTile
       return (TileValue resultTile)
-    _ -> die "Invalid operands for 'gibb' operation"
+    _ -> error "Invalid operands for 'gibb' operation"
 
 
 pasteTheTile :: Int -> Int -> [[Bool]] -> [[Bool]] -> [[Bool]]
@@ -118,7 +119,7 @@ evaluateSubtile x y size tileExp env = do
     (IntValue xInt, IntValue yInt, IntValue sizeInt, TileValue tile) -> do
       let subTile = subTileFromTile xInt yInt sizeInt tile
       return (TileValue subTile)
-    _ -> die "Invalid operands for 'subtile' operation"
+    _ -> error "Invalid operands for 'subtile' operation"
 
 subTileFromTile x y size tile = Data.List.take size . Prelude.map (Data.List.take size . Data.List.drop x) . Data.List.drop y $ tile
 
@@ -130,7 +131,7 @@ evaluateOr e1 e2 env = do
     (TileValue tile1, TileValue tile2) -> do
       let resultTile = orTiles tile1 tile2
       return (TileValue resultTile)
-    _ -> die "The operands of 'or' should be Tile"
+    _ -> error "The operands of 'or' should be a Tile"
 
 orTiles tile1 tile2 = zipWith (zipWith (||)) tile1 tile2
 
@@ -146,7 +147,7 @@ evaluateBlank e env = do
     IntValue size -> do
       let blankTile = replicate size (replicate size False)
       return (TileValue blankTile)
-    _ -> die "The operand of '_' should be a Tile"
+    _ -> error "The operand of '_' should be a Tile"
 
 --evaluate and operation
 evaluateAnd e1 e2 env = do
@@ -156,7 +157,7 @@ evaluateAnd e1 e2 env = do
     (TileValue tile1, TileValue tile2) -> do
       let resultTile = andTiles tile1 tile2
       return (TileValue resultTile)
-    _ -> die "The operands of 'and' should be Tile"
+    _ -> error "The operands of 'and' should be a Tile"
 andTiles tile1 tile2 = zipWith (zipWith (&&)) tile1 tile2
 
 --reflect tile y axis
@@ -166,7 +167,7 @@ evaluateReflectY e env = do
     TileValue tile -> do
       let reflectedTile = reflectYTile tile
       return (TileValue reflectedTile)
-    _ -> die "The operand of 'reflectY' should be a Tile"
+    _ -> error "The operand of 'reflectY' should be a Tile"
 
 reflectYTile = Prelude.map reverse
 
@@ -177,7 +178,7 @@ evaluateReflectX e env = do
     TileValue tile -> do
       let reflectedTile = reflectXTile tile
       return (TileValue reflectedTile)
-    _ -> die "The operand of 'reflectX' should be a Tile"
+    _ -> error "The operand of 'reflectX' should be a Tile"
 
 reflectXTile = reverse
 
@@ -188,7 +189,7 @@ evaluateNot e env = do
     TileValue tile -> do
       let negatedTile = Prelude.map (Prelude.map not) tile
       return (TileValue negatedTile)
-    _ -> die "The operand of 'not' should be a Tile" 
+    _ -> error "The operand of 'not' should be a Tile" 
 
 --rotate tile
 evaluateRotate n e env = do
@@ -197,7 +198,7 @@ evaluateRotate n e env = do
     TileValue tile -> do
       let rotatedTile = rotateNTimes n tile
       return (TileValue rotatedTile)
-    _ -> die "The operand of 'rotate' should be a Tile"
+    _ -> error "The operand of 'rotate' should be a Tile"
 
 rotate90Clockwise :: Tile -> Tile
 rotate90Clockwise = Prelude.map reverse . transpose
@@ -218,7 +219,7 @@ evaluateScale n e env = do
     TileValue tile -> do
       let scaledTile = scaleNTimes n tile
       return (TileValue scaledTile)
-    _ -> die "The operand of 'scale' should be a Tile"
+    _ -> error "The operand of 'scale' should be a Tile"
 
 -- Helper function to scale a tile by a factor of n
 scaleNTimes :: Int -> Tile -> Tile
@@ -233,7 +234,7 @@ evaluateJoinH e1 e2 env = do
     (TileValue t1, TileValue t2) -> do
       let joinedTile = joinTilesH t1 t2
       return (TileValue joinedTile)
-    _ -> die "Both operands of joinH should be Tile"
+    _ -> error "Both operands of joinH should be a Tile"
 
 joinTilesH t1 t2 = zipWith (++) t1 t2
 
@@ -245,7 +246,7 @@ evaluateJoinV e1 e2 env = do
     (TileValue t1, TileValue t2) -> do
       let joinedTile = joinTilesV t1 t2
       return (TileValue joinedTile)
-    _ -> die "Both operands of joinV should be Tile"
+    _ -> error "Both operands of joinV should be a Tile"
   
 joinTilesV t1 t2 = t1 ++ t2
 
@@ -257,7 +258,7 @@ evaluateExport x (Var y) env = case Map.lookup x (symbolTable env) of
     let filePath = y ++".tl"
     writeTilefile filePath tile
     return env
-  _ -> die $ "Tile variable not found: " ++ x
+  _ -> error $ "Tile variable not found: " ++ x
 
 boolToChar True = '1'
 boolToChar False = '0'
@@ -282,7 +283,7 @@ readFileTile filePath = catch readSuccess noRead
       return $ parseTile file
     noRead :: IOException -> IO Tile
     noRead e = do
-      die $ "File not found: " ++ filePath
+      error $ "File not found: " ++ filePath
 
 evaluateInt :: Int -> Enviroment -> Enviroment
 evaluateInt x env = undefined
@@ -296,7 +297,7 @@ evaluateRepeat n es env
   | n > 0 = do
       newEnv <- evalExpSeq es env
       evaluateRepeat (n - 1) es newEnv
-  | otherwise = die "Repeat count should be non-negative"
+  | otherwise = error "Repeat count should be non-negative"
 
 
 
@@ -313,6 +314,12 @@ noParse :: ErrorCall ->IO ()
 noParse e = do 
   let err =  show e
   hPutStr stderr ("Parsing Error: " ++ err)
+  return ()
+
+runtimeError :: ErrorCall -> IO ()
+runtimeError e = do 
+  let err =  show e
+  hPutStr stderr ("Runtime Error: " ++ err)
   return ()
 
 validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
