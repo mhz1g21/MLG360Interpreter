@@ -18,7 +18,7 @@ lexing = do
   putStrLn ("Lexing : " ++ sourceText)
   let lexedProg = alexScanTokens sourceText
   putStrLn ("Lexed as " ++ (show lexedProg))
-  parsing lexedProg
+  catch (parsing lexedProg) noParse
 
 parsing lexedProg = do 
   let parsedProg = parseJulio lexedProg
@@ -56,7 +56,7 @@ evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
 evalExp (Repeat n e) env = evaluateRepeat n e env
-evalExp _ _ = error "Not implemented"
+evalExp e _ = die ("invalid use of expression" ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
 evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
@@ -74,7 +74,7 @@ evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
 evalExpToValue (Subtile x y size tile) env = evaluateSubtile x y size tile env
 evalExpToValue (Gibb x y pasteTile baseTile) env = evaluateGibb x y pasteTile baseTile env
-evalExpToValue _ _ = die "undefiend operation attempted to be evaluated"
+evalExpToValue e _ = die "invalide use of assignment expressions"
 
 --operations of expressionss
 -- ################################################
@@ -142,6 +142,9 @@ evaluateBlank e env = do
       let numRows = length referenceTile
       let numCols = length (head referenceTile)
       let blankTile = replicate numRows (replicate numCols False)
+      return (TileValue blankTile)
+    IntValue size -> do
+      let blankTile = replicate size (replicate size False)
       return (TileValue blankTile)
     _ -> die "The operand of '_' should be a Tile"
 
@@ -311,8 +314,6 @@ noParse e = do
   let err =  show e
   hPutStr stderr ("Parsing Error: " ++ err)
   return ()
-
-
 
 validateTile tile1 tile2 = allEqual (Prelude.map length tile1) && allEqual (Prelude.map length tile2)
   where 
