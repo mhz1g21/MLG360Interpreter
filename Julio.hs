@@ -41,7 +41,8 @@ initEnv = Enviroment [] empty
 type Tile = [[Bool]]
 
 data Value = TileValue Tile 
-  | IntValue Int deriving (Show,Eq)
+  | IntValue Int
+  | BoolValue Bool deriving (Show,Eq)
 
 --evaluator
 -- ######################################################################################################################
@@ -57,12 +58,15 @@ evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
 evalExp (Import x y) env = evaluateImport x y env
 evalExp (Repeat n e) env = evaluateRepeat n e env
+evalExp (Print e) env = evaluatePrint e env
+evalExp (While cond expSeq) env = evaluateWhile cond expSeq env
 evalExp e _ = error ("invalid use of expression" ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
+evalExpToValue (Bool b) _ = return (BoolValue b)
 evalExpToValue (Var x) env = case Map.lookup x (symbolTable env) of
   Just value -> return value
-  Nothing    -> die ("Variable " ++ x ++ " not found")
+  Nothing    -> error ("Variable " ++ x ++ " not found")
 evalExpToValue (JoinV e1 e2) env = evaluateJoinV e1 e2 env
 evalExpToValue (JoinH e1 e2) env = evaluateJoinH e1 e2 env
 evalExpToValue (Not e) env = evaluateNot e env
@@ -75,6 +79,14 @@ evalExpToValue(Blank e) env = evaluateBlank e env
 evalExpToValue (Or e1 e2) env = evaluateOr e1 e2 env
 evalExpToValue (Subtile x y size tile) env = evaluateSubtile x y size tile env
 evalExpToValue (Gibb x y pasteTile baseTile) env = evaluateGibb x y pasteTile baseTile env
+evalExpToValue (LessThan e1 e2) env = evaluateLessThan e1 e1 env
+evalExpToValue (GreaterThan e1 e2) env = evaluateGreaterThan e1 e2 env
+evalExpToValue (IsEqual e1 e2) env = evaluateIsEqual e1 e2 env
+evalExpToValue (NotEqual e1 e2) env = evaluateNotEqual e1 e2 env
+evalExpToValue (Width e) env = evaluateWidth e env
+evalExpToValue (Height e) env = evaluateHeight e env
+evalExpToValue (Add e1 e2) env = evaluateAdd e1 e2 env
+evalExpToValue (Sub e1 e2) env = evaluateSub e1 e2 env
 evalExpToValue e _ = error "invalide use of assignment expressions"
 
 --operations of expressionss
@@ -84,6 +96,104 @@ evaluateEquals x e env = do
   let updatedSymbolTable = Map.insert x value (symbolTable env)
   return (env { symbolTable = updatedSymbolTable })
 
+-- subtraction of ints
+evaluateSub exp1 exp2 env = do
+  val1 <- evalExpToValue exp1 env
+  val2 <- evalExpToValue exp2 env
+  case (val1, val2) of
+    (IntValue i1, IntValue i2) -> return $ IntValue (i1 - i2)
+    _ -> error "The 'Sub' operation expects both operands to be Int or variables that reference Int"
+
+--addition of ints
+evaluateAdd exp1 exp2 env = do
+  val1 <- evalExpToValue exp1 env
+  val2 <- evalExpToValue exp2 env
+  case (val1, val2) of
+    (IntValue i1, IntValue i2) -> return $ IntValue (i1 + i2)
+    _ -> error "The 'Add' operation expects both operands to be Int or variables that reference Int"
+
+--while loop
+evaluateWhile cond expSeq env = do
+  condValue <- evalExpToValue cond env
+  case condValue of
+    BoolValue True -> do
+      newEnv <- evalExpSeq expSeq env
+      evaluateWhile cond expSeq newEnv
+    BoolValue False -> return env
+    _ -> error "The 'While' condition must be a LessThan, GreaterThan, IsEqual, NotEqual, or BoolValue expression"
+
+--print function
+evaluatePrint e env = do
+  value <- evalExpToValue exp env
+  case value of
+    IntValue i    -> do
+      putStrLn (show i)
+      return (IntValue i)
+    BoolValue b   -> do
+      putStrLn (show b)
+      return (BoolValue b)
+    TileValue tile -> do
+      putStrLn (show tile)
+      return (TileValue tile)
+    _ -> error "The 'Print' function expects a Var, Int or Bool value or a variable referring to such values"
+
+--calculate width of a tile
+evaluateWidth e env = do
+  value <- evalExpToValue e env
+  case value of
+    TileValue tile -> return (IntValue (calculateWidth tile))
+    _ -> error "The 'Width' function expects a Tile"
+
+calculateWidth tile = case tile of
+  []     -> 0
+  (x:_)  -> length x
+
+--calculate height of a tile
+evaluateHeight e env = do
+  value <- evalExpToValue e env
+  case value of
+    TileValue tile -> return (IntValue (calculateHeight tile))
+    _ -> error "The 'Height' function expects a Tile"
+
+calculateHeight tile = length tile
+
+--equals comparison
+evaluateNotEqual e1 e2 env = do
+  value1 <- evalExpToValue e1 env
+  value2 <- evalExpToValue e2 env
+  case (value1, value2) of
+    (IntValue n1, IntValue n2)         -> return (BoolValue (n1 /= n2))
+    (BoolValue b1, BoolValue b2)       -> return (BoolValue (b1 /= b2))
+    (TileValue t1, TileValue t2)       -> return (BoolValue (t1 /= t2))
+    _ -> error "Both operands of 'NotEqual' should be Int, Bool, or Tile values or variables referring to Int, Bool, or Tile values"
+
+--not equal comparison
+evaluateIsEqual e1 e2 env = do
+  value1 <- evalExpToValue e1 env
+  value2 <- evalExpToValue e2 env
+  case (value1, value2) of
+    (IntValue n1, IntValue n2)         -> return (BoolValue (n1 == n2))
+    (BoolValue b1, BoolValue b2)       -> return (BoolValue (b1 == b2))
+    (TileValue t1, TileValue t2)       -> return (BoolValue (t1 == t2))
+    _ -> error "Both operands of 'IsEqual' should be Int, Bool, or Tile values or variables referring to Int, Bool, or Tile values"
+
+--greater than comparison
+evaluateGreaterThan e1 e2 env = do
+  value1 <- evalExpToValue e1 env
+  value2 <- evalExpToValue e2 env
+  case (value1, value2) of
+    (IntValue n1, IntValue n2) -> return (BoolValue (n1 > n2))
+    _ -> error "Both operands of 'GreaterThan' should be Int values or variables referring to Int values"
+
+--less than comparison
+evaluateLessThan e1 e2 env = do
+  value1 <- evalExpToValue e1 env
+  value2 <- evalExpToValue e2 env
+  case (value1, value2) of
+    (IntValue n1, IntValue n2) -> return (BoolValue (n1 < n2))
+    _ -> error "Both operands of 'LessThan' should be Int values or variables referring to Int values"
+
+--paste a tile ontop of another tile
 evaluateGibb x y pasteTile baseTile env = do
   let xValue = IntValue x
   yValue <- evalExpToValue y env
@@ -131,7 +241,8 @@ evaluateOr e1 e2 env = do
     (TileValue tile1, TileValue tile2) -> do
       let resultTile = orTiles tile1 tile2
       return (TileValue resultTile)
-    _ -> error "The operands of 'or' should be a Tile"
+    (BoolValue b1, BoolValue b2) -> return (BoolValue (b1 || b2))
+    _ -> error "The operands of 'or' should be a Tile or Bool values or variables referring to Tile or Bool values"
 
 orTiles tile1 tile2 = zipWith (zipWith (||)) tile1 tile2
 
@@ -157,7 +268,8 @@ evaluateAnd e1 e2 env = do
     (TileValue tile1, TileValue tile2) -> do
       let resultTile = andTiles tile1 tile2
       return (TileValue resultTile)
-    _ -> error "The operands of 'and' should be a Tile"
+    (BoolValue b1, BoolValue b2) -> return (BoolValue (b1 && b2))
+    _ -> error "The operands of 'and' should be a Tile or Bool values or variables referring to Tile or Bool values"
 andTiles tile1 tile2 = zipWith (zipWith (&&)) tile1 tile2
 
 --reflect tile y axis
@@ -189,7 +301,8 @@ evaluateNot e env = do
     TileValue tile -> do
       let negatedTile = Prelude.map (Prelude.map not) tile
       return (TileValue negatedTile)
-    _ -> error "The operand of 'not' should be a Tile" 
+    BoolValue b -> return (BoolValue (not b))
+    _ -> error "The operand of 'not' should be a Tile or Bool value or variable referring to a Tile or Bool value"
 
 --rotate tile
 evaluateRotate n e env = do
