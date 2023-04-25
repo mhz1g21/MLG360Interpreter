@@ -22,7 +22,7 @@ $white+         ;
 "joinH"         { \p s -> TJoinH p   }
 "joinV"         { \p s -> TJoinV p   }
 ";"           { \p s -> TSemiColon p  }
-"nothing"     { \p s -> TNothing p}
+"none"     { \p s -> TNone p}
 "not"	      { \p s -> TNot p }
 "rotate"          { \p s -> TRotate p }
 "scale"           {\ p s -> TScale p }
@@ -90,7 +90,7 @@ data Token =
   |TAdd AlexPosn
   |TSub AlexPosn
   |TBoolean AlexPosn Bool
-  |TNothing AlexPosn
+  |TNone AlexPosn
   deriving (Eq, Show)
 
 tokenPosn :: Token -> String 
@@ -129,5 +129,5 @@ tokenPosn (TPrint(AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TAdd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSub (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TBoolean (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
-tokenPosn (TNothing (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TNone (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }

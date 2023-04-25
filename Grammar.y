@@ -30,8 +30,8 @@ import Tokens
   or      {TOr $$}
   subtile {TSubtile $$}
   gibb    {TGibb $$}
-  true    {TBool (AlexPn x y z) $$}
-  false   {TBool (AlexPn x y z) $$}
+  true    {TBoolean (AlexPn x y z) $$}
+  false   {TBoolean (AlexPn x y z) $$}
   lt      {TLessThan $$}
   gt      {TGreaterThan $$}
   eq      {TIsEqual $$}
@@ -44,7 +44,7 @@ import Tokens
   print   {TPrint $$}
   '+'     {TAdd $$}
   '-'     {TSub $$}
-  nothing  {TNothing $$}
+  none  {TNone $$}
 
 %left 'joinH'
 %left 'joinV'
@@ -83,6 +83,7 @@ import Tokens
 
 ExpSeq: Exp ';' ExpSeq { ExpSeq $1 $3} 
 	| Exp ';' { Exp $1}
+  | none   {None}
 
 Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | joinH Exp Exp            { JoinH $2 $3}
@@ -106,10 +107,10 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | true                     { Bool True }
     | false                    { Bool False }
     | lt Exp Exp               { LessThan $2 $3 }
-    | gt Exp Exp             { GreaterThan $1 $3 }
+    | gt Exp Exp             { GreaterThan $2 $3 }
     | eq Exp Exp             {IsEqual $2 $3}
     | neq Exp Exp           {NotEqual $2 $3}
-    | if Exp '{' ExpSeq '}' else '{' ConditionExp '}'   {If $2 $4 $8}
+    | if Exp '{' ExpSeq '}' else '{' ExpSeq '}'   {If $2 $4 $8}
     | while Exp '{' ExpSeq '}'    {While $2 $4 }
     | width Exp              {Width $2}
     | height Exp             {Height $2}
@@ -117,14 +118,13 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | '+' Exp Exp           {Add $2 $3}
     | '-' Exp Exp           {Sub $2 $3}
 
-ConditionExp: nothing         {ConditionExp Nothing}
-{ ExpSeq                      {ConditionExp $1}  
-
+{  
 parseError :: [Token] -> a
 parseError (x:xs) = error ("Parse error at "++ (tokenPosn x))
 
 data ExpSeq = ExpSeq Exp ExpSeq 
 		| Exp Exp 
+    | None
 		deriving Show
 
 data Exp = Repeat Int ExpSeq
@@ -157,6 +157,5 @@ data Exp = Repeat Int ExpSeq
          | Add Exp Exp
          | Sub Exp Exp
          | If Exp ExpSeq ExpSeq
-         | Nothing
          deriving Show
 } 
