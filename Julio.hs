@@ -16,20 +16,21 @@ main = catch lexing noLex
 lexing = do 
   (fileName : _ ) <- getArgs 
   sourceText <- readFile fileName
-  putStrLn ("Lexing : " ++ sourceText)
+  --putStrLn ("Lexing : " ++ sourceText)
   let lexedProg = alexScanTokens sourceText
-  putStrLn ("Lexed as " ++ (show lexedProg))
+  --putStrLn ("Lexed as " ++ (show lexedProg))
   catch (parsing lexedProg) noParse
 
 parsing lexedProg = do 
   let parsedProg = parseJulio lexedProg
-  putStrLn ("Parsed as " ++ (show parsedProg))
+  --putStrLn ("Parsed as " ++ (show parsedProg))
   catch (doEnviroment parsedProg) runtimeError
 
 
 doEnviroment parsedProg = do
   finalEnv <- evalExpSeq parsedProg initEnv
-  putStrLn ("Finished with Enviroment")
+  --putStrLn ("Finished with Enviroment")
+  return ();
 
 
 --enviroment variables

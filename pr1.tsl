@@ -10,6 +10,3 @@ t7 = joinV t5 t6;
 t8 = t7;
 repeat 31 {t8 = joinV t7 t8;};
 print t8;
-t9 = width t8;
-print t9;
-print height t8;
