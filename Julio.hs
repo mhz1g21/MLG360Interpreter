@@ -53,7 +53,7 @@ evalExpSeq (Exp e) env = evalExp e env
 evalExpSeq (ExpSeq e es) env = do
   newEnv <- evalExp e env
   evalExpSeq es newEnv
-evalExpSeq None env = return env
+evalExpSeq _ env = return env
 
 evalExp (Equals x e) env = evaluateEquals x e env
 evalExp (Export x y) env = evaluateExport x y env
