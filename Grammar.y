@@ -30,8 +30,8 @@ import Tokens
   or      {TOr $$}
   subtile {TSubtile $$}
   gibb    {TGibb $$}
-  true    {TBoolean (AlexPn x y z) $$}
   false   {TBoolean (AlexPn x y z) $$}
+  true    {TBoolean (AlexPn x y z) $$}
   lt      {TLessThan $$}
   gt      {TGreaterThan $$}
   eq      {TIsEqual $$}
@@ -104,8 +104,8 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | or Exp Exp               { Or $2 $3 }
     | subtile int Exp Exp Exp  { Subtile $2 $3 $4 $5}
     | gibb int Exp Exp Exp     { Gibb $2 $3 $4 $5}
-    | true                     { Bool True }
-    | false                    { Bool False }
+    | false                    { Bool $1 }
+    | true                     { Bool $1}
     | lt Exp Exp               { LessThan $2 $3 }
     | gt Exp Exp             { GreaterThan $2 $3 }
     | eq Exp Exp             {IsEqual $2 $3}
