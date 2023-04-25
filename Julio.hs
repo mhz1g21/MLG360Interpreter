@@ -62,7 +62,7 @@ evalExp (Repeat n e) env = evaluateRepeat n e env
 evalExp (Print e) env = evaluatePrint e env
 evalExp (While cond expSeq) env = evaluateWhile cond expSeq env
 evalExp (If condition trueExpSeq falseExpSeq) env = evaluateIf condition trueExpSeq falseExpSeq env
-evalExp None _ = return initEnv
+evalExp None env = return env
 evalExp e _ = error ("invalid use of expression " ++ show e)
 
 evalExpToValue (Int n) _ = return (IntValue n)
@@ -134,6 +134,7 @@ evaluateWhile cond expSeq env = do
     _ -> error "The 'While' condition must be a LessThan, GreaterThan, IsEqual, NotEqual, or BoolValue expression"
 
 --print function
+evaluatePrint :: Exp -> Enviroment -> IO Enviroment
 evaluatePrint e env = do
   value <- evalExpToValue e env
   case value of
@@ -145,9 +146,11 @@ evaluatePrint e env = do
       return env
     TileValue tile -> do
       let tileAsOnesAndZeros = [ [ if b then 1 else 0 | b <- row ] | row <- tile ]
-      mapM_ print tileAsOnesAndZeros
+          tileAsStrings = [ concatMap show row | row <- tileAsOnesAndZeros ]
+      mapM_ putStrLn tileAsStrings
       return env
     _ -> error "The 'Print' function expects a Var, Int or Bool value or a variable referring to such values"
+
 
 
 --calculate width of a tile
