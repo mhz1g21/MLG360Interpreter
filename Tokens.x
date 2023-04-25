@@ -128,7 +128,6 @@ tokenPosn (THeight (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TPrint(AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TAdd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TSub (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TTrue (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TFalse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TBoolean (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
 tokenPosn (TNothing (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 }
