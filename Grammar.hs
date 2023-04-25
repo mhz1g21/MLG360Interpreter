@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.20.1.1
+-- parser produced by Happy Version 1.20.0
 
 data HappyAbsSyn t4 t5
 	= HappyTerminal (Token)
@@ -1977,7 +1977,7 @@ happyReduction_28 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (If happy_var_2 happy_var_4 Else happy_var_8
+		 (If happy_var_2 happy_var_4 happy_var_8
 	) `HappyStk` happyRest
 
 happyReduce_29 = happyReduce 5 5 happyReduction_29
@@ -2147,8 +2147,7 @@ data Exp = Repeat Int ExpSeq
          | Print Exp
          | Add Exp Exp
          | Sub Exp Exp
-         | If Exp ExpSeq
-         | If Exp ExpSeq Else ExpSeq
+         | If Exp ExpSeq ExpSeq
          deriving Show
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $

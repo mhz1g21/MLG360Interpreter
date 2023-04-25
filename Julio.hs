@@ -124,18 +124,17 @@ evaluateWhile cond expSeq env = do
 
 --print function
 evaluatePrint e env = do
-  value <- evalExpToValue exp env
+  value <- evalExpToValue e env
   case value of
     IntValue i    -> do
       putStrLn (show i)
-      return (IntValue i)
     BoolValue b   -> do
       putStrLn (show b)
-      return (BoolValue b)
     TileValue tile -> do
-      putStrLn (show tile)
-      return (TileValue tile)
+      let tileAsOnesAndZeros = [ [ if b then 1 else 0 | b <- row ] | row <- tile ]
+      mapM_ print tileAsOnesAndZeros
     _ -> error "The 'Print' function expects a Var, Int or Bool value or a variable referring to such values"
+
 
 --calculate width of a tile
 evaluateWidth e env = do
