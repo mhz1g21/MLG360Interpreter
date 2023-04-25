@@ -44,15 +44,22 @@ import Tokens
   print   {TPrint $$}
   '+'     {TAdd $$}
   '-'     {TSub $$}
-
-%left 'rotate'
-%left 'repeat'
 %left 'joinH'
 %left 'joinV'
+%left 'rotate'
+%left 'repeat'
 %left '='
 %left ';'
 %left '<<'
 %left '>>'
+%left 'while'
+%left 'if'
+%left 'else'
+%left 'width'
+%left 'height'
+%left 'print'
+%left '+'
+%left '-'
 %left 'not'
 %left 'scale'
 %left 'reflectX'
@@ -64,6 +71,9 @@ import Tokens
 %left 'gibb'
 %left 'lt'
 %left 'gt'
+%left 'eq'
+%left 'neq'
+
 
 
 
@@ -93,18 +103,18 @@ Exp : repeat int '{' ExpSeq '}'  { Repeat $2 $4}
     | gibb int Exp Exp Exp     { Gibb $2 $3 $4 $5}
     | true                     { Bool $1 }
     | false                    { Bool $1 }
-    | Exp lt Exp               { LessThan $1 $3 }
-    | Exp gt Exp               { LessThan $1 $3 }
-    | Exp eq Exp              {IsEqual $1 $3}
-    | Exp neq Exp             {NotEqual $1 $3}
+    | lt Exp Exp               { LessThan $2 $3 }
+    | gt Exp Exp             { GreaterThan $1 $3 }
+    | eq Exp Exp             {IsEqual $2 $3}
+    | neq Exp Exp           {NotEqual $2 $3}
     | if Exp '{' ExpSeq '}'   {If $2 $4}
     | if Exp '{' ExpSeq '}' else '{' ExpSeq '}'   {If $2 $4 Else $8}
     | while Exp '{' ExpSeq '}'    {While $2 $4 }
     | width Exp              {Width $2}
     | height Exp             {Height $2}
     | print Exp              {Print $2}
-    | Exp '+' Exp            {Add $1 $3}
-    | Exp '-' Exp            {Sub $1 $3}
+    | '+' Exp Exp           {Add $2 $3}
+    | '-' Exp Exp           {Sub $2 $3}
 { 
 parseError :: [Token] -> a
 parseError (x:xs) = error ("Parse error at "++ (tokenPosn x))
