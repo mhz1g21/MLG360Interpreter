@@ -411,8 +411,14 @@ evaluateImport x (Var y) env = do
   let filename  = show y
   let filepath = y ++".tl"
   tile <- readFileTile filepath
-  let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
-  return env {symbolTable = newSymbolTable}
+  let height = length tile
+  let width = length (head tile)
+  case (height == width) of
+    True -> do
+      let newSymbolTable = Map.insert x (TileValue tile) (symbolTable env)
+      return env {symbolTable = newSymbolTable}
+    False -> error "Tile must be square (NxN)"
+
 parseTile = Prelude.map (Prelude.map (== '1')). lines
 
 readFileTile filePath = catch readSuccess noRead
