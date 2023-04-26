@@ -1,2 +1,2 @@
 tile1 << tile1;
-subtile 2 10 tile1;
+print tile1;
