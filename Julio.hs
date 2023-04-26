@@ -366,7 +366,11 @@ evaluateJoinH e1 e2 env = do
       return (TileValue joinedTile)
     _ -> error "Both operands of joinH should be a Tile"
 
-joinTilesH t1 t2 = zipWith (++) t1 t2
+joinTilesH t1 t2 = do
+  let equal = length t1 == length t2
+  case (equal) of
+    True -> zipWith (++) t1 t2
+    False -> error "Tiles must have the same number of rows to be joined horizontally"
 
 --join tiles vertically
 evaluateJoinV e1 e2 env = do
@@ -378,7 +382,12 @@ evaluateJoinV e1 e2 env = do
       return (TileValue joinedTile)
     _ -> error "Both operands of joinV should be a Tile"
   
-joinTilesV t1 t2 = t1 ++ t2
+joinTilesV t1 t2 = do
+  let equal = length (head t1) == length (head t2)
+  case (equal) of
+    True -> t1 ++ t2
+    False -> error "Tiles must have the same number of columns to be joined vertically"
+  
 
 
 --export tile

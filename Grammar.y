@@ -3,7 +3,8 @@ module Grammar where
 import Tokens
 }
 
-%name parseJulio 
+%name parse
+Julio 
 %tokentype { Token } 
 %error { parseError }
 %token 
