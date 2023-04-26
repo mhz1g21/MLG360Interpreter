@@ -1,7 +1,7 @@
 t1 << tile1;
-t2 = reflectY t1;
-t3 = reflectX t1;
-t4 = reflectX t2;
+t2 = reflectX t1;
+t3 = reflectY t1;
+t4 = reflectY t2;
 t5 = _ t1;
 t6 = joinH t1 t3;
 t6 = joinH t6 t5;
