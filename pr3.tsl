@@ -1,0 +1,17 @@
+t1 << tile1;
+t2 = reflectX t1;
+t3 = reflectY t1;
+t4 = reflectY t2;
+t5 = _ t1;
+t6 = joinH t1 t3;
+t6 = joinH t6 t5;
+t7 = joinH t5 t2;
+t7 = joinH t7 t4;
+t6 = joinV t6 t7;
+t7 = reflectX t6;
+t6 = joinH t6 t7;
+t7 = t6;
+repeat 19 {t7 = joinH t7 t6;};
+t6 = t7;
+repeat 29 {t7 = joinV t7 t6;};
+print t7;

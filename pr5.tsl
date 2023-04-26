@@ -1,0 +1,13 @@
+t1 << tile1;
+t2 = subtile 0 0 6 t1;
+t3 = subtile 2 2 6 t1;
+t4 = subtile 4 4 6 t1;
+t5 = t2;
+repeat 2 {t2 = joinH t2 t5;};
+t5 = t3;
+repeat 2 {t3 = joinH t3 t5;};
+t5 = t4;
+repeat 2 {t4 = joinH t4 t5;};
+t5 = joinV t2 t3;
+t5 = joinV t5 t4;
+print t5;

@@ -1,0 +1,17 @@
+t1 << tile1;
+t2 = rotate 1 t1;
+t3 = joinH t1 t2;
+t4 = rotate 1 t2;
+t5 = rotate 1 t4;
+t6 = joinH t5 t4;
+t7 = joinV t3 t6;
+t8 = t7;
+t10 = t7;
+repeat 4 {t8 = joinH t8 t7;};
+t9 = scale 3 t7;
+repeat 2 {t10 = joinV t10 t7;};
+t11 = joinH t10 t9;
+t11 = joinH t11 t10;
+t11 = joinV t8 t11;
+t11 = joinV t11 t8;
+print t11;
