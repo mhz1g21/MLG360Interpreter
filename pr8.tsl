@@ -35,5 +35,5 @@ t21 = joinH t19 t20;
 t22 = joinH t21 t21;
 t22 = joinH t21 t19; 
 t21 = t22;
-repeat 7 {t21 = joinV t21 t22;};
+repeat 3 {t21 = joinV t21 t22;};
 print t21;
