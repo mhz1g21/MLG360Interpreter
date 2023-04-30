@@ -1,0 +1,32 @@
+t1 << tile1;
+t2 = _ t1;
+t3 = t2;
+x = 2;
+repeat 100 {t3 = joinH t3 t2;};
+repeat 100 {t4 = t1; y = 3; repeat 100 { if lt y x {t4 = joinH t4 t1;} else {t4 = joinH t4 t2;}; y = + y 2;};x = + x 1; t3 = joinV t3 t4;};
+
+t4 = rotate 1 t3;
+t4 = reflectY t4;
+t5 = rotate 3 t3;
+t6 = rotate 2 t3;
+t6 = reflectX t6;
+
+t7 = not t3;
+t8 = not t5;
+t9 = and t7 t5;
+t10 = and t3 t8;
+t11 = or t10 t9;
+
+t12 = not t4;
+t13 = not t6;
+t14 = and t12 t6;
+t15 = and t13 t4;
+t16 = or t14 t15;
+
+t17 = not t11;
+t18 = not t16;
+t19 = and t17 t16;
+t20 = and t18 t11;
+t21 = or t20 t19;
+
+print t21;
