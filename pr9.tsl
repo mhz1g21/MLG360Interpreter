@@ -28,5 +28,4 @@ t18 = not t16;
 t19 = and t17 t16;
 t20 = and t18 t11;
 t21 = or t20 t19;
-
 print t21;
