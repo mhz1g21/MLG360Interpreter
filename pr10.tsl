@@ -1,0 +1,9 @@
+t1 << tile1;
+t2 << tile2;
+bl = _ 5;
+nbl = not bl;
+nt1 = not t1;
+t3 = gibb 12 12 nbl nt1;
+t4 = not t3;
+t5 = gibb 12 12 t2 t4;
+print t5;
