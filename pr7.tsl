@@ -1,10 +1,16 @@
+:) 100N tile
 t1 << tile1;
 t2 = scale 100 t1;
-:) 100N tile
-
+print(t2);
+:)padTile is just a default tile that is N size
+:)padTileH and V are just default tiles N height/width repeated a certain amount of time
 padTile = _ (width t1);
 padTileH = _ (width t1);
 padTileV = _ (width t1);
+
+:) repeat H so it is 100N wide
+
+:) 98N tile
 
 repeat 99 { padTileH = joinH padTileH padTile;};
 repeat 97 { padTileV = joinV padTileV padTile;};
@@ -12,19 +18,46 @@ repeat 97 { padTileV = joinV padTileV padTile;};
 padTileH2 = joinV padTileH padTileH;
 padTileV2 = joinH padTileV padTileV;
 
-
 t3 = scale 98 t1;
-print (width t3);
-
 t3 = joinH padTileV2 t3;
 t3 = joinV padTileH2 t3;
-:) 98N tile
-print (t3);
+print(t3);
 
+:) 96N Tile
 
+padTileV = _ (width t1);
+repeat 95 { padTileV = joinV padTileV padTile;};
 
-:)print padTileV;
-:)print padTileH;
-:)print (width padTileH);
-:)print (height padTileV);
-:)print t2;
+padTileV2 = joinH padTileV padTileV;
+repeat 2{ padTileH2 = joinV padTileH2 padTileH;padTileV2 = joinH padTileV2 padTileV;};
+
+t4 = scale 96 t1;
+t4 = joinH padTileV2 t4;
+t4 = joinV padTileH2 t4;
+print(t4);
+
+:) 94N Tile
+
+padTileV = _ (width t1);
+repeat 93 { padTileV = joinV padTileV padTile;};
+padTileV2 = joinH padTileV padTileV;
+
+repeat 2{padTileH2 = joinV padTileH2 padTileH;};
+repeat 4{ padTileV2 = joinH padTileV2 padTileV;};
+t5 = scale 94 t1;
+t5 = joinH padTileV2 t5;
+t5 = joinV padTileH2 t5;
+print(t5);
+
+:) 92N Tile
+
+padTileV = _ (width t1);
+repeat 91 { padTileV = joinV padTileV padTile;};
+padTileV2 = joinH padTileV padTileV;
+
+repeat 2{padTileH2 = joinV padTileH2 padTileH;};
+repeat 6{ padTileV2 = joinH padTileV2 padTileV;};
+t6 = scale 92 t1;
+t6 = joinH padTileV2 t6;
+t6 = joinV padTileH2 t6;
+print(t6);
