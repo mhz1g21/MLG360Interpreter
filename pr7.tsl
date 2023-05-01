@@ -1,0 +1,30 @@
+t1 << tile1;
+t2 = scale 100 t1;
+:) 100N tile
+
+padTile = _ (width t1);
+padTileH = _ (width t1);
+padTileV = _ (width t1);
+
+repeat 99 { padTileH = joinH padTileH padTile;};
+repeat 97 { padTileV = joinV padTileV padTile;};
+
+padTileH2 = joinV padTileH padTileH;
+padTileV2 = joinH padTileV padTileV;
+
+
+t3 = scale 98 t1;
+print (width t3);
+
+t3 = joinH padTileV2 t3;
+t3 = joinV padTileH2 t3;
+:) 98N tile
+print (t3);
+
+
+
+:)print padTileV;
+:)print padTileH;
+:)print (width padTileH);
+:)print (height padTileV);
+:)print t2;
