@@ -1,0 +1,14 @@
+:) 100N tile
+t1 << tile1;
+t2 = scale 100 t1;
+
+:) Repeat statement will use the paddingMask to add the padding
+paddingMask = _ 100;
+paddingMask = not paddingMask;
+zeroesForXorMask = _ 100;
+repeat 49 {paddingMask = gibb 2 2 paddingMask zeroesForXorMask;print(paddingMask);print(2);};
+:)print(XORMask);
+
+
+
+
