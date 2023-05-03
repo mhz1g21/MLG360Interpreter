@@ -1,2 +1,0 @@
-tile1 << tile1;
-print tile1;
